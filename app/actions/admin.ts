@@ -36,15 +36,15 @@ const int = (fd: FormData, key: string) => {
 // Session
 
 export async function adminLogin(_: FormState, fd: FormData): Promise<FormState> {
-  if (!process.env.ADMIN_PASSWORD) return { error: 'ADMIN_PASSWORD er ikke sat i miljøvariablerne.' }
-  if (!checkAdminPassword(String(fd.get('password') ?? ''))) return { error: 'Forkert adgangskode.' }
+  if (!process.env.ADMIN_PASSWORD) return { error: 'ADMIN_PASSWORD is not set in the environment variables.' }
+  if (!checkAdminPassword(String(fd.get('password') ?? ''))) return { error: 'Incorrect password.' }
   await startAdminSession()
   redirect('/admin')
 }
 
 export async function adminLogout() {
   await endAdminSession()
-  redirect('/admin/log-ind')
+  redirect('/admin/login')
 }
 
 // Opening hours
@@ -55,13 +55,13 @@ export async function addWindow(_: FormState, fd: FormData): Promise<FormState> 
   const start = parseTime(fd.get('start'))
   const end = parseTime(fd.get('end'))
   const repeat = Math.min(Math.max(Number(fd.get('repeat')) || 0, 0), 26)
-  if (!isDate(date)) return { error: 'Vælg en dato.' }
-  if (start === null || end === null || end <= start) return { error: 'Sluttid skal være efter starttid.' }
+  if (!isDate(date)) return { error: 'Choose a date.' }
+  if (start === null || end === null || end <= start) return { error: 'The end time must be after the start time.' }
   for (let w = 0; w <= repeat; w++) {
     await query('INSERT INTO availability (date, start_min, end_min) VALUES ($1, $2, $3)', [addDays(date, w * 7), start, end])
   }
   revalidatePath('/admin', 'layout')
-  return { ok: repeat ? `Tilføjet ${repeat + 1} uger i træk.` : 'Tilføjet.' }
+  return { ok: repeat ? `Added for ${repeat + 1} weeks in a row.` : 'Added.' }
 }
 
 export async function deleteWindow(fd: FormData) {
@@ -78,10 +78,10 @@ function readService(fd: FormData) {
   const duration = int(fd, 'duration')
   const from = int(fd, 'price_from')
   const to = int(fd, 'price_to')
-  if (!name || !category) return { error: 'Navn og kategori skal udfyldes.' } as const
-  if (!duration || duration < 5 || duration > 600) return { error: 'Varighed skal være mellem 5 og 600 minutter.' } as const
-  if (from === null || Number.isNaN(from) || from < 0) return { error: 'Skriv en pris.' } as const
-  if (Number.isNaN(to) || (to !== null && to < from)) return { error: '"Pris til" skal være højere end "pris fra".' } as const
+  if (!name || !category) return { error: 'Name and category are required.' } as const
+  if (!duration || duration < 5 || duration > 600) return { error: 'Duration must be between 5 and 600 minutes.' } as const
+  if (from === null || Number.isNaN(from) || from < 0) return { error: 'Enter a price.' } as const
+  if (Number.isNaN(to) || (to !== null && to < from)) return { error: '"Price to" must be higher than "Price from".' } as const
   return {
     value: {
       name,
@@ -105,8 +105,8 @@ export async function createService(_: FormState, fd: FormData): Promise<FormSta
      VALUES ($1,$2,$3,$4,$5,$6,$7,(SELECT coalesce(max(sort_order), 0) + 1 FROM services))`,
     [s.category, s.name, s.description, s.duration, s.from, s.to, true],
   )
-  revalidatePath('/admin/ydelser')
-  redirect('/admin/ydelser?gemt=1')
+  revalidatePath('/admin/services')
+  redirect('/admin/services?saved=1')
 }
 
 export async function updateService(_: FormState, fd: FormData): Promise<FormState> {
@@ -118,8 +118,8 @@ export async function updateService(_: FormState, fd: FormData): Promise<FormSta
     `UPDATE services SET category=$1, name=$2, description=$3, duration_min=$4, price_from=$5, price_to=$6, active=$7 WHERE id=$8`,
     [s.category, s.name, s.description, s.duration, s.from, s.to, s.active, Number(fd.get('id'))],
   )
-  revalidatePath('/admin/ydelser')
-  return { ok: 'Gemt.' }
+  revalidatePath('/admin/services')
+  return { ok: 'Saved.' }
 }
 
 export async function moveService(fd: FormData) {
@@ -138,7 +138,7 @@ export async function moveService(fd: FormData) {
   const a = neighbour.sort_order === current.sort_order ? current.sort_order + dir : neighbour.sort_order
   await query('UPDATE services SET sort_order = $1 WHERE id = $2', [a, current.id])
   await query('UPDATE services SET sort_order = $1 WHERE id = $2', [current.sort_order, neighbour.id])
-  revalidatePath('/admin/ydelser')
+  revalidatePath('/admin/services')
 }
 
 /** Moves a whole category up or down by renumbering every service in the new order. */
@@ -156,14 +156,14 @@ export async function moveCategory(fd: FormData) {
       await query('UPDATE services SET sort_order = $1 WHERE id = $2', [n++, s.id])
     }
   }
-  revalidatePath('/admin/ydelser')
+  revalidatePath('/admin/services')
 }
 
 export async function deleteService(fd: FormData) {
   await requireAdmin()
   await query('DELETE FROM services WHERE id = $1', [Number(fd.get('id'))])
-  revalidatePath('/admin/ydelser')
-  redirect('/admin/ydelser')
+  revalidatePath('/admin/services')
+  redirect('/admin/services')
 }
 
 // Customers
@@ -173,14 +173,14 @@ async function readCustomer(fd: FormData, ignoreId = 0) {
   const email = str(fd, 'email').toLowerCase() || null
   const phoneRaw = str(fd, 'phone')
   const phone = phoneRaw ? normalizePhone(phoneRaw) : null
-  if (!name) return { error: 'Skriv et navn.' } as const
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'E-mailen ser ikke rigtig ud.' } as const
-  if (phoneRaw && !phone) return { error: 'Telefonnummeret ser ikke rigtigt ud.' } as const
+  if (!name) return { error: 'Enter a name.' } as const
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "That email doesn't look right." } as const
+  if (phoneRaw && !phone) return { error: "That phone number doesn't look right." } as const
   const clash = await one<{ name: string }>(
     'SELECT name FROM customers WHERE id <> $1 AND ((email IS NOT NULL AND email = $2) OR (phone IS NOT NULL AND phone = $3))',
     [ignoreId, email, phone],
   )
-  if (clash) return { error: `E-mail eller telefon bruges allerede af ${clash.name}.` } as const
+  if (clash) return { error: `That email or phone number is already used by ${clash.name}.` } as const
   return { value: { name, email, phone, notes: str(fd, 'notes') } } as const
 }
 
@@ -194,7 +194,7 @@ export async function createCustomer(_: FormState, fd: FormData): Promise<FormSt
     [c.name, c.email, c.phone, c.notes],
   )
   revalidatePath('/admin', 'layout')
-  redirect(`/admin/kunder/${row!.id}`)
+  redirect(`/admin/customers/${row!.id}`)
 }
 
 export async function updateCustomer(_: FormState, fd: FormData): Promise<FormState> {
@@ -205,22 +205,22 @@ export async function updateCustomer(_: FormState, fd: FormData): Promise<FormSt
   const c = r.value
   await query('UPDATE customers SET name=$1, email=$2, phone=$3 WHERE id=$4', [c.name, c.email, c.phone, id])
   revalidatePath('/admin', 'layout')
-  return { ok: 'Gemt.' }
+  return { ok: 'Saved.' }
 }
 
 export async function saveNotes(_: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin()
   await query('UPDATE customers SET notes = $1 WHERE id = $2', [str(fd, 'notes'), Number(fd.get('id'))])
-  revalidatePath('/admin/kunder')
-  return { ok: 'Noter gemt.' }
+  revalidatePath('/admin/customers')
+  return { ok: 'Notes saved.' }
 }
 
 export async function setCustomerPassword(_: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin()
   const pw = String(fd.get('password') ?? '')
-  if (pw.length < 6) return { error: 'Mindst 6 tegn.' }
+  if (pw.length < 6) return { error: 'At least 6 characters.' }
   await query('UPDATE customers SET password_hash = $1 WHERE id = $2', [await hashPassword(pw), Number(fd.get('id'))])
-  return { ok: 'Ny adgangskode sat. Giv den til kunden, så de kan logge ind.' }
+  return { ok: 'New password set. Give it to the customer so they can log in.' }
 }
 
 export async function deleteCustomer(fd: FormData) {
@@ -230,7 +230,7 @@ export async function deleteCustomer(fd: FormData) {
   await query('DELETE FROM bookings WHERE customer_id = $1 AND date >= $2', [id, today()])
   await query('DELETE FROM customers WHERE id = $1', [id])
   revalidatePath('/admin', 'layout')
-  redirect('/admin/kunder')
+  redirect('/admin/customers')
 }
 
 // Bookings made by the hairdresser
@@ -243,15 +243,15 @@ export async function saveBooking(_: FormState, fd: FormData): Promise<FormState
   const date = str(fd, 'date')
   const start = parseTime(fd.get('time'))
   const durationOverride = int(fd, 'duration')
-  if (!customerId) return { error: 'Vælg en kunde.' }
-  if (!service) return { error: 'Vælg en behandling.' }
-  if (!isDate(date)) return { error: 'Vælg en dato.' }
-  if (start === null) return { error: 'Vælg et tidspunkt.' }
+  if (!customerId) return { error: 'Choose a customer.' }
+  if (!service) return { error: 'Choose a treatment.' }
+  if (!isDate(date)) return { error: 'Choose a date.' }
+  if (start === null) return { error: 'Choose a time.' }
   if (Number.isNaN(durationOverride) || (durationOverride !== null && (durationOverride < 5 || durationOverride > 600))) {
-    return { error: 'Varighed skal være mellem 5 og 600 minutter.' }
+    return { error: 'Duration must be between 5 and 600 minutes.' }
   }
   const end = start + (durationOverride ?? service.duration_min)
-  if (end > 24 * 60) return { error: 'Behandlingen slutter efter midnat.' }
+  if (end > 24 * 60) return { error: 'The treatment ends after midnight.' }
 
   const overlap = await findOverlap(date, start, end, id)
   if (overlap) return { error: overlapMessage(overlap) }
@@ -261,10 +261,10 @@ export async function saveBooking(_: FormState, fd: FormData): Promise<FormState
   let mailKind: CustomerMailKind | null = null
   if (id) {
     const existing = await getBooking(id)
-    if (!existing) return { error: 'Bookingen findes ikke længere.' }
+    if (!existing) return { error: 'This booking no longer exists.' }
     const changedTime = existing.date !== date || existing.start_min !== start
-    if (existing.status === 'cancelled' || existing.customer_id !== customerId) mailKind = 'booket'
-    else if (changedTime || existing.end_min !== end || existing.service_id !== service.id) mailKind = 'flyttet'
+    if (existing.status === 'cancelled' || existing.customer_id !== customerId) mailKind = 'booked'
+    else if (changedTime || existing.end_min !== end || existing.service_id !== service.id) mailKind = 'moved'
     await query(
       `UPDATE bookings SET customer_id=$1, service_id=$2, service_name=$3, category=$4, price_from=$5, price_to=$6,
        date=$7, start_min=$8, end_min=$9, note=$10, status='booked', cancelled_by=NULL, cancel_reason=NULL, reminded = reminded AND NOT $11 WHERE id=$12`,
@@ -277,7 +277,7 @@ export async function saveBooking(_: FormState, fd: FormData): Promise<FormState
       [customerId, service.id, service.name, service.category, service.price_from, service.price_to, date, start, end, note],
     )
     bookingId = row!.id
-    mailKind = 'booket'
+    mailKind = 'booked'
   }
   const kind = mailKind
   if (kind && fd.get('notify') === 'on' && isUpcoming({ date, start_min: start })) {
@@ -286,7 +286,7 @@ export async function saveBooking(_: FormState, fd: FormData): Promise<FormState
     after(() => notifyCustomer(kind, customer, info, 'salon'))
   }
   revalidatePath('/admin', 'layout')
-  redirect(`/admin/kalender?date=${date}&dag=1`)
+  redirect(`/admin/calendar?date=${date}&day=1`)
 }
 
 export async function deleteBooking(fd: FormData) {
@@ -296,11 +296,11 @@ export async function deleteBooking(fd: FormData) {
     await query('DELETE FROM bookings WHERE id = $1', [b.id])
     if (fd.get('notify') === 'on' && b.customer_id && b.status === 'booked' && isUpcoming(b)) {
       const customer = await one<{ name: string; email: string | null }>('SELECT name, email FROM customers WHERE id = $1', [b.customer_id])
-      after(() => notifyCustomer('aflyst', customer, b, 'salon'))
+      after(() => notifyCustomer('cancelled', customer, b, 'salon'))
     }
   }
   revalidatePath('/admin', 'layout')
-  redirect(b ? `/admin/kalender?date=${b.date}&dag=1` : '/admin/kalender')
+  redirect(b ? `/admin/calendar?date=${b.date}&day=1` : '/admin/calendar')
 }
 
 // Cancelling a whole day, e.g. when the hairdresser is ill
@@ -308,10 +308,10 @@ export async function deleteBooking(fd: FormData) {
 export async function cancelDay(_: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin()
   const date = str(fd, 'date')
-  if (!isDate(date) || date < today()) return { error: 'Dagen kan ikke aflyses.' }
+  if (!isDate(date) || date < today()) return { error: "This day can't be cancelled." }
   const custom = str(fd, 'custom').slice(0, 300)
-  if (fd.get('reason') === 'egen' && !custom) return { error: 'Skriv en årsag, eller vælg sygdom.' }
-  const reason = fd.get('reason') === 'egen' ? custom : SICK_REASON
+  if (fd.get('reason') === 'custom' && !custom) return { error: 'Enter a reason, or choose illness.' }
+  const reason = fd.get('reason') === 'custom' ? custom : SICK_REASON
 
   const affected = (
     await query<Booking & { email: string | null }>(
@@ -330,8 +330,8 @@ export async function cancelDay(_: FormState, fd: FormData): Promise<FormState> 
 
   revalidatePath('/admin', 'layout')
   const back = str(fd, 'back')
-  const base = back.startsWith('/admin/kalender') ? back : `/admin/kalender?date=${date}&dag=1`
-  redirect(`${base}&aflyst=${affected.length}&mailet=${recipients.length}`)
+  const base = back.startsWith('/admin/calendar') ? back : `/admin/calendar?date=${date}&day=1`
+  redirect(`${base}&cancelled=${affected.length}&mailed=${recipients.length}`)
 }
 
 /** Emails each customer with the next free time. Customers from the same day get different suggestions. */
@@ -354,7 +354,7 @@ async function mailDayCancelled(bookings: (Booking & { email: string | null })[]
     try {
       await sendMail(b.email!, dayCancelledMail(b.customer_name ?? '', { ...b, service_id: service?.active ? b.service_id : null }, reason, suggestion))
     } catch (err) {
-      console.error('Kunne ikke sende aflysning til kunden', b.id, err)
+      console.error('Could not send the cancellation to the customer', b.id, err)
     }
   }
 }

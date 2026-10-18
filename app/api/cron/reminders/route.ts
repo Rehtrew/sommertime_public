@@ -5,14 +5,14 @@ import type { Booking } from '@/lib/data'
 
 /**
  * Runs once a day via Vercel Cron (see vercel.json, free on the Hobby plan).
- * Emails customers who have a time tomorrow. Does nothing until SMTP is configured.
+ * Emails customers who have an appointment tomorrow. Does nothing until SMTP is configured.
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET
   if (secret && req.headers.get('authorization') !== `Bearer ${secret}`) {
     return new Response('Unauthorized', { status: 401 })
   }
-  if (!mailEnabled()) return Response.json({ sent: 0, note: 'SMTP er ikke sat op' })
+  if (!mailEnabled()) return Response.json({ sent: 0, note: 'SMTP is not set up' })
 
   const tomorrow = addDays(today(), 1)
   const rows = await query<Booking & { name: string; email: string }>(
@@ -27,7 +27,7 @@ export async function GET(req: Request) {
       await query('UPDATE bookings SET reminded = true WHERE id = $1', [b.id])
       sent++
     } catch (err) {
-      console.error('Påmindelse fejlede', b.id, err)
+      console.error('Reminder failed', b.id, err)
     }
   }
   return Response.json({ sent })

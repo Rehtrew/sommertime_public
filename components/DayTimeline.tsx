@@ -42,14 +42,14 @@ export function DayTimeline({ windows, bookings }: { windows: Window[]; bookings
           >
             {short ? (
               <span className="block truncate text-[14px] leading-[20px]">
-                {fmtTime(b.start_min)} {b.customer_name ?? 'Slettet kunde'} · <span className="text-muted">{b.service_name}</span>
+                {fmtTime(b.start_min)} {b.customer_name ?? 'Deleted customer'} · <span className="text-muted">{b.service_name}</span>
               </span>
             ) : (
               <span className="block py-2 leading-tight">
                 <span className="block text-[13px] text-muted">
                   {fmtTime(b.start_min)}–{fmtTime(b.end_min)}
                 </span>
-                <span className="block truncate text-[17px]">{b.customer_name ?? 'Slettet kunde'}</span>
+                <span className="block truncate text-[17px]">{b.customer_name ?? 'Deleted customer'}</span>
                 <span className="block truncate text-[14px] text-muted">{b.service_name}</span>
               </span>
             )}

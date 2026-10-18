@@ -49,8 +49,8 @@ export async function DayPanel({
 
   const hoursCard = (
     <section className="card">
-      <h3 className="text-[22px]">Åbningstid</h3>
-      <p className="mt-1 mb-4 text-[15px] text-muted">Kunderne kan kun booke inden for de tider, du åbner.</p>
+      <h3 className="text-[22px]">Opening hours</h3>
+      <p className="mt-1 mb-4 text-[15px] text-muted">Customers can only book within the hours you open.</p>
       {isOpen && (
         <ul className="mb-4 flex flex-wrap gap-2">
           {windows.map((w) => (
@@ -60,7 +60,7 @@ export async function DayPanel({
                 <input type="hidden" name="id" value={w.id} />
                 <button
                   className="flex h-9 w-9 items-center justify-center rounded-full text-muted hover:bg-white hover:text-danger"
-                  aria-label={`Fjern åbningstid ${fmtTime(w.start_min)}–${fmtTime(w.end_min)}`}
+                  aria-label={`Remove opening hours ${fmtTime(w.start_min)}–${fmtTime(w.end_min)}`}
                 >
                   <X size={18} />
                 </button>
@@ -70,29 +70,29 @@ export async function DayPanel({
         </ul>
       )}
       {past ? (
-        <p className="rounded-[18px] bg-tile px-4 py-3 text-muted">Dagen er gået.</p>
+        <p className="rounded-[18px] bg-tile px-4 py-3 text-muted">This day has passed.</p>
       ) : (
         <ActionForm action={addWindow} className="flex flex-col gap-3">
           <input type="hidden" name="date" value={date} />
           <div className="grid grid-cols-2 gap-2">
-            <Field label="Fra">
+            <Field label="From">
               <input className="input" type="time" name="start" defaultValue="10:00" step={900} required />
             </Field>
-            <Field label="Til">
+            <Field label="To">
               <input className="input" type="time" name="end" defaultValue="17:00" step={900} required />
             </Field>
           </div>
-          <Field label="Gentag">
+          <Field label="Repeat">
             <select name="repeat" className="input" defaultValue="0">
-              <option value="0">Kun denne dag</option>
-              <option value="1">Samme tid 2 uger i træk</option>
-              <option value="3">Samme tid 4 uger i træk</option>
-              <option value="7">Samme tid 8 uger i træk</option>
-              <option value="11">Samme tid 12 uger i træk</option>
+              <option value="0">This day only</option>
+              <option value="1">Same time for 2 weeks</option>
+              <option value="3">Same time for 4 weeks</option>
+              <option value="7">Same time for 8 weeks</option>
+              <option value="11">Same time for 12 weeks</option>
             </select>
           </Field>
-          <SubmitButton className="btn mt-1" pendingText="Gemmer…">
-            <Plus size={18} /> {isOpen ? 'Tilføj mere åbningstid' : 'Åbn dagen for booking'}
+          <SubmitButton className="btn mt-1" pendingText="Saving…">
+            <Plus size={18} /> {isOpen ? 'Add more opening hours' : 'Open the day for booking'}
           </SubmitButton>
         </ActionForm>
       )}
@@ -103,9 +103,9 @@ export async function DayPanel({
     <section className="card">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="text-[22px]">
-          Bookinger <span className="text-muted">{bookings.length || ''}</span>
+          Bookings <span className="text-muted">{bookings.length || ''}</span>
         </h3>
-        <Link href={`/admin/booking/ny?date=${date}`} className="btn btn-sm relative">
+        <Link href={`/admin/booking/new?date=${date}`} className="btn btn-sm relative">
           <Plus size={18} /> Book
           <LinkPending />
         </Link>
@@ -113,20 +113,20 @@ export async function DayPanel({
       {isOpen || bookings.length ? (
         <DayTimeline windows={windows} bookings={bookings} />
       ) : (
-        <p className="text-muted">Ingen bookinger.</p>
+        <p className="text-muted">No bookings.</p>
       )}
       {cancelled.length > 0 && (
         <div className="mt-5 border-t border-line pt-4">
-          <p className="mb-2 text-[15px] text-muted">Aflyste tider</p>
+          <p className="mb-2 text-[15px] text-muted">Cancelled appointments</p>
           <ul className="flex flex-col gap-2 text-[15px] text-muted">
             {cancelled.map((b) => (
               <li key={b.id}>
                 <Link href={`/admin/booking/${b.id}`} className="hover:text-ink">
                   <span className="line-through decoration-1">
-                    {fmtTime(b.start_min)} {b.customer_name ?? 'Slettet kunde'} · {b.service_name}
+                    {fmtTime(b.start_min)} {b.customer_name ?? 'Deleted customer'} · {b.service_name}
                   </span>
                   <span className="block text-[13px]">
-                    {b.cancelled_by === 'salon' ? `Aflyst af dig${b.cancel_reason ? `: ${b.cancel_reason}` : ''}` : 'Aflyst af kunden'}
+                    {b.cancelled_by === 'salon' ? `Cancelled by you${b.cancel_reason ? `: ${b.cancel_reason}` : ''}` : 'Cancelled by the customer'}
                   </span>
                 </Link>
               </li>
@@ -145,25 +145,25 @@ export async function DayPanel({
           <p className="mt-2">
             {isOpen ? (
               <span className="inline-flex rounded-full bg-[#eef0fa] px-3 py-1 text-[15px]">
-                Åben {windows.map((w) => `${fmtTime(w.start_min)}–${fmtTime(w.end_min)}`).join(', ')}
+                Open {windows.map((w) => `${fmtTime(w.start_min)}–${fmtTime(w.end_min)}`).join(', ')}
               </span>
             ) : (
-              <span className="inline-flex rounded-full bg-card px-3 py-1 text-[15px] text-muted">Lukket for booking</span>
+              <span className="inline-flex rounded-full bg-card px-3 py-1 text-[15px] text-muted">Closed for booking</span>
             )}
           </p>
         </div>
-        <Link href={closeHref} scroll={false} className={roundBtn} aria-label="Luk">
+        <Link href={closeHref} scroll={false} className={roundBtn} aria-label="Close">
           <X size={20} />
         </Link>
       </div>
 
       <div className="flex gap-2 px-2">
         <Link href={prevHref} scroll={false} className="chip relative !bg-card">
-          <ChevronLeft size={18} /> Forrige dag
+          <ChevronLeft size={18} /> Previous day
           <LinkPending />
         </Link>
         <Link href={nextHref} scroll={false} className="chip relative !bg-card">
-          Næste dag <ChevronRight size={18} />
+          Next day <ChevronRight size={18} />
           <LinkPending />
         </Link>
       </div>
@@ -174,13 +174,14 @@ export async function DayPanel({
             <Check size={18} />
           </span>
           <p className="text-[16px] leading-snug">
-            Dagen er aflyst og lukket for booking.
-            {cancelNotice.cancelled > 0 && ` ${cancelNotice.cancelled} ${cancelNotice.cancelled === 1 ? 'tid er' : 'tider er'} aflyst.`}
+            The day is cancelled and closed for booking.
+            {cancelNotice.cancelled > 0 &&
+              ` ${cancelNotice.cancelled} ${cancelNotice.cancelled === 1 ? 'appointment was' : 'appointments were'} cancelled.`}
             {cancelNotice.mailed > 0 &&
-              ` ${cancelNotice.mailed} ${cancelNotice.mailed === 1 ? 'kunde har' : 'kunder har'} fået en mail med forslag til en ny tid.`}
+              ` ${cancelNotice.mailed} ${cancelNotice.mailed === 1 ? 'customer has' : 'customers have'} been emailed a suggested new time.`}
             {cancelNotice.cancelled > 0 &&
               cancelNotice.mailed < cancelNotice.cancelled &&
-              (cancelNotice.mailed === 0 ? ' Der er ikke sendt mails, så giv selv kunderne besked.' : ' Resten skal du selv give besked.')}
+              (cancelNotice.mailed === 0 ? ' No emails were sent, so let the customers know yourself.' : ' Let the rest know yourself.')}
           </p>
         </div>
       )}

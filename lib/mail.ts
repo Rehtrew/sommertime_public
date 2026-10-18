@@ -66,7 +66,7 @@ type MailBooking = Pick<Booking, 'date' | 'start_min' | 'end_min' | 'service_nam
   Partial<Pick<Booking, 'note' | 'price_from' | 'price_to'>>
 
 function when(b: MailBooking) {
-  return `${fmtDate(b.date)} kl. ${fmtTime(b.start_min)}–${fmtTime(b.end_min)}`
+  return `${fmtDate(b.date)} at ${fmtTime(b.start_min)}–${fmtTime(b.end_min)}`
 }
 
 // HTML email. Tables and inline styles, because that is what mail clients understand.
@@ -114,12 +114,12 @@ function layout(o: {
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;border-top:1.5px dashed ${LINE};">
         <tr>
           <td width="50%" align="center" valign="top" style="padding:18px 8px 0;border-right:1.5px dashed ${LINE};">
-            <p style="${text(14, MUTED)}">Dato og tid</p>
+            <p style="${text(14, MUTED)}">Date and time</p>
             <p style="${text(22, INK, `margin-top:4px;${slot}`)}">${fmtTime(b.start_min)}–${fmtTime(b.end_min)}</p>
             <p style="${text(14, MUTED, slot)}">${esc(cap(fmtDate(b.date)))}</p>
           </td>
           <td width="50%" align="center" valign="top" style="padding:18px 8px 0;">
-            <p style="${text(14, MUTED)}">Varighed</p>
+            <p style="${text(14, MUTED)}">Duration</p>
             <p style="${text(22, INK, 'margin-top:4px;')}">${fmtDuration(b.end_min - b.start_min)}</p>
             ${price(b) ? `<p style="${text(14, MUTED)}">${price(b)}</p>` : ''}
           </td>
@@ -131,7 +131,7 @@ function layout(o: {
             : ''
         }`
   return `<!doctype html>
-<html lang="da">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -150,7 +150,7 @@ function layout(o: {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;">
     <tr><td style="padding:4px 10px 16px;"><p style="${text(20)}">${SALON_NAME}</p></td></tr>
     <tr><td style="background:#ffffff;border-radius:28px;padding:8px;">
-      <img src="${site}/${o.cancelled ? 'mail-header-aflyst.jpg' : 'mail-header.jpg'}" width="504" alt="" style="display:block;width:100%;max-width:504px;height:auto;border:0;border-radius:22px;">
+      <img src="${site}/${o.cancelled ? 'mail-header-cancelled.jpg' : 'mail-header.jpg'}" width="504" alt="" style="display:block;width:100%;max-width:504px;height:auto;border:0;border-radius:22px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr><td class="pad" style="padding:24px 20px 28px;">
         ${
@@ -164,7 +164,7 @@ function layout(o: {
         ${
           o.place
             ? `<a href="${SALON.mapsHref}" style="display:block;margin-top:16px;padding:14px 16px;background:#f4f4f4;border-radius:18px;text-decoration:none;">
-                <span style="${text(14, MUTED, 'display:block;')}">Sted</span>
+                <span style="${text(14, MUTED, 'display:block;')}">Location</span>
                 <span style="${text(17, INK, 'display:block;')}">${esc(SALON.address)}</span>
               </a>`
             : ''
@@ -177,8 +177,8 @@ function layout(o: {
         }
         ${
           o.suggestion
-            ? `<p style="${text(14, MUTED, 'margin-top:24px;padding:16px 18px 0;background:#eef0fa;border-radius:18px 18px 0 0;')}">Næste ledige tid</p>
-               <p style="${text(22, INK, 'padding:2px 18px 16px;background:#eef0fa;border-radius:0 0 18px 18px;line-height:1.2;')}">${esc(cap(fmtDate(o.suggestion.date)))} kl. ${fmtTime(o.suggestion.start_min)}</p>`
+            ? `<p style="${text(14, MUTED, 'margin-top:24px;padding:16px 18px 0;background:#eef0fa;border-radius:18px 18px 0 0;')}">Next available time</p>
+               <p style="${text(22, INK, 'padding:2px 18px 16px;background:#eef0fa;border-radius:0 0 18px 18px;line-height:1.2;')}">${esc(cap(fmtDate(o.suggestion.date)))} at ${fmtTime(o.suggestion.start_min)}</p>`
             : ''
         }
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:${o.suggestion ? 12 : 24}px;">
@@ -200,7 +200,7 @@ function layout(o: {
             <p style="${text(15, INK)}">${SALON_NAME}</p>
             <p style="${text(14, MUTED, 'margin-top:4px;line-height:1.5;')}">
               <a href="${SALON.mapsHref}" style="color:${MUTED};text-decoration:none;">${esc(SALON.address)}</a><br>
-              <a href="${SALON.phoneHref}" style="color:${MUTED};text-decoration:none;">Tlf. ${SALON.phone}</a>
+              <a href="${SALON.phoneHref}" style="color:${MUTED};text-decoration:none;">Phone ${SALON.phone}</a>
             </p>
           </td></tr>`
         : ''
@@ -214,36 +214,36 @@ function layout(o: {
 }
 
 const ADMIN_COPY = {
-  ny: { label: 'Ny booking', subject: 'Ny booking', verb: 'har booket' },
-  flyttet: { label: 'Booking flyttet', subject: 'Booking flyttet', verb: 'har flyttet sin tid til' },
-  aflyst: { label: 'Booking aflyst', subject: 'Booking aflyst', verb: 'har aflyst' },
+  new: { label: 'New booking', subject: 'New booking', verb: 'has booked' },
+  moved: { label: 'Booking moved', subject: 'Booking moved', verb: 'has moved their appointment to' },
+  cancelled: { label: 'Booking cancelled', subject: 'Booking cancelled', verb: 'has cancelled' },
 }
 
 export function adminMail(kind: keyof typeof ADMIN_COPY, customerName: string, b: MailBooking): Mail {
   const copy = ADMIN_COPY[kind]
-  const href = `${siteUrl()}/admin/kalender?date=${b.date}&dag=1`
-  const cancelled = kind === 'aflyst'
+  const href = `${siteUrl()}/admin/calendar?date=${b.date}&day=1`
+  const cancelled = kind === 'cancelled'
   return {
-    subject: `${copy.subject}: ${customerName}, ${fmtDate(b.date)} kl. ${fmtTime(b.start_min)}`,
+    subject: `${copy.subject}: ${customerName}, ${fmtDate(b.date)} at ${fmtTime(b.start_min)}`,
     text: [
       `${customerName} ${copy.verb}:`,
       '',
       b.service_name,
       when(b),
-      b.note ? `\nBesked: ${b.note}` : '',
+      b.note ? `\nMessage: ${b.note}` : '',
       '',
       href,
     ].join('\n'),
     html: layout({
-      preheader: cancelled ? `${b.service_name} er aflyst. Tiden er ledig igen.` : `${b.service_name}, ${when(b)}`,
+      preheader: cancelled ? `${b.service_name} is cancelled. The time is available again.` : `${b.service_name}, ${when(b)}`,
       label: copy.label,
       heading: customerName,
       sub: b.service_name,
       b,
       cancelled,
-      notice: cancelled ? 'Tiden er ledig igen, så andre kan booke den.' : undefined,
-      button: { text: 'Åbn kalenderen', href },
-      footer: `Sendt fra dit bookingsystem`,
+      notice: cancelled ? 'The time is available again, so others can book it.' : undefined,
+      button: { text: 'Open the calendar', href },
+      footer: `Sent from your booking system`,
     }),
   }
 }
@@ -252,46 +252,46 @@ export function adminMail(kind: keyof typeof ADMIN_COPY, customerName: string, b
 export async function notifyAdmin(kind: keyof typeof ADMIN_COPY, customerName: string, b: MailBooking) {
   const to = adminRecipients()
   if (!to.length || !mailEnabled()) {
-    console.warn('Besked til admin ikke sendt. Mangler:', mailStatus().missing.join(', '))
+    console.warn('Admin notification not sent. Missing:', mailStatus().missing.join(', '))
     return
   }
   try {
     await sendMail(to, adminMail(kind, customerName, b))
   } catch (err) {
-    console.error('Kunne ikke sende besked til admin', err)
+    console.error('Could not send admin notification', err)
   }
 }
 
 export function reminderMail(name: string, b: MailBooking): Mail {
   const first = firstName(name)
-  const href = `${siteUrl()}/hjem`
+  const href = `${siteUrl()}/home`
   return {
-    subject: `Påmindelse: din tid i morgen hos ${SALON_NAME}`,
+    subject: `Reminder: your appointment at ${SALON_NAME} tomorrow`,
     text: [
-      `Hej ${first}`,
+      `Hi ${first}`,
       '',
-      `En lille påmindelse om din tid i morgen:`,
+      `A quick reminder about your appointment tomorrow:`,
       '',
       b.service_name,
       when(b),
       '',
-      `Skal du flytte eller aflyse, kan du gøre det her: ${href}`,
+      `If you need to move or cancel, you can do it here: ${href}`,
       '',
-      `Vi ses`,
+      `See you soon`,
       SALON_NAME,
       SALON.address,
-      `Tlf. ${SALON.phone}`,
+      `Phone ${SALON.phone}`,
     ].join('\n'),
     html: layout({
-      preheader: `${b.service_name} i morgen kl. ${fmtTime(b.start_min)}`,
-      label: 'I morgen',
+      preheader: `${b.service_name} tomorrow at ${fmtTime(b.start_min)}`,
+      label: 'Tomorrow',
       heading: b.service_name,
       b: { ...b, note: undefined },
-      intro: `Hej ${first}, vi glæder os til at se dig. Skal du flytte eller aflyse, kan du gøre det på din side eller ringe på ${SALON.phone}.`,
+      intro: `Hi ${first}, we look forward to seeing you. If you need to move or cancel, you can do it on your page or call ${SALON.phone}.`,
       place: true,
       contact: true,
-      button: { text: 'Se din tid', href },
-      footer: `Du får denne mail, fordi du har en tid hos ${SALON_NAME}.`,
+      button: { text: 'View your appointment', href },
+      footer: `You're receiving this email because you have an appointment at ${SALON_NAME}.`,
     }),
   }
 }
@@ -299,9 +299,9 @@ export function reminderMail(name: string, b: MailBooking): Mail {
 // Emails to the customer when a booking is made, moved or cancelled
 
 const CUSTOMER_COPY = {
-  booket: { label: 'Din tid er booket', subject: 'Din tid er booket' },
-  flyttet: { label: 'Din tid er flyttet', subject: 'Din tid er flyttet' },
-  aflyst: { label: 'Din tid er aflyst', subject: 'Din tid er aflyst' },
+  booked: { label: 'Your appointment is booked', subject: 'Your appointment is booked' },
+  moved: { label: 'Your appointment has been moved', subject: 'Your appointment has been moved' },
+  cancelled: { label: 'Your appointment is cancelled', subject: 'Your appointment is cancelled' },
 }
 
 export type CustomerMailKind = keyof typeof CUSTOMER_COPY
@@ -315,25 +315,25 @@ export function customerMail(
 ): Mail {
   const copy = CUSTOMER_COPY[kind]
   const first = firstName(name)
-  const cancelled = kind === 'aflyst'
+  const cancelled = kind === 'cancelled'
   const intro = {
-    booket:
+    booked:
       by === 'salon'
-        ? `Hej ${first}, din frisør har booket en tid til dig. Kalenderfilen er vedhæftet, så du kan lægge den i din kalender.`
-        : `Hej ${first}, tak for din booking. Kalenderfilen er vedhæftet, så du kan lægge tiden i din kalender.`,
-    flyttet:
+        ? `Hi ${first}, your hairdresser has booked an appointment for you. The calendar file is attached, so you can add it to your calendar.`
+        : `Hi ${first}, thanks for your booking. The calendar file is attached, so you can add the appointment to your calendar.`,
+    moved:
       by === 'salon'
-        ? `Hej ${first}, din frisør har flyttet din tid til tidspunktet her. Den opdaterede kalenderfil er vedhæftet.`
-        : `Hej ${first}, din tid er flyttet til tidspunktet her. Den opdaterede kalenderfil er vedhæftet.`,
-    aflyst:
+        ? `Hi ${first}, your hairdresser has moved your appointment to this time. The updated calendar file is attached.`
+        : `Hi ${first}, your appointment has been moved to this time. The updated calendar file is attached.`,
+    cancelled:
       by === 'salon'
-        ? `Hej ${first}, din frisør har desværre måttet aflyse din tid. Du er velkommen til at booke en ny.`
-        : `Hej ${first}, din tid er aflyst. Du er altid velkommen til at booke en ny.`,
+        ? `Hi ${first}, unfortunately your hairdresser has had to cancel your appointment. You're welcome to book a new one.`
+        : `Hi ${first}, your appointment is cancelled. You're always welcome to book a new one.`,
   }[kind]
-  const href = `${siteUrl()}${cancelled ? '/book' : '/hjem'}`
+  const href = `${siteUrl()}${cancelled ? '/book' : '/home'}`
   return {
-    subject: `${copy.subject}: ${b.service_name}, ${fmtDate(b.date)} kl. ${fmtTime(b.start_min)}`,
-    text: [intro, '', b.service_name, when(b), cancelled ? '' : SALON.address, '', href, '', SALON_NAME, `Tlf. ${SALON.phone}`].join('\n'),
+    subject: `${copy.subject}: ${b.service_name}, ${fmtDate(b.date)} at ${fmtTime(b.start_min)}`,
+    text: [intro, '', b.service_name, when(b), cancelled ? '' : SALON.address, '', href, '', SALON_NAME, `Phone ${SALON.phone}`].join('\n'),
     html: layout({
       preheader: `${b.service_name}, ${when(b)}`,
       label: copy.label,
@@ -343,15 +343,15 @@ export function customerMail(
       intro,
       place: !cancelled,
       contact: true,
-      button: { text: cancelled ? 'Book en ny tid' : 'Se din tid', href },
-      footer: `Du får denne mail, fordi du har en profil hos ${SALON_NAME}.`,
+      button: { text: cancelled ? 'Book a new appointment' : 'View your appointment', href },
+      footer: `You're receiving this email because you have a profile at ${SALON_NAME}.`,
     }),
     attachments: cancelled
       ? undefined
       : [
           {
             filename: 'booking.ics',
-            content: bookingIcs(b, SALON_NAME, `${siteUrl()}/hjem`),
+            content: bookingIcs(b, SALON_NAME, `${siteUrl()}/home`),
             contentType: 'text/calendar; charset=utf-8',
           },
         ],
@@ -369,7 +369,7 @@ export async function notifyCustomer(
   try {
     await sendMail(customer.email, customerMail(kind, customer.name, b, by))
   } catch (err) {
-    console.error('Kunne ikke sende mail til kunden', err)
+    console.error('Could not send email to the customer', err)
   }
 }
 
@@ -377,18 +377,18 @@ export async function notifyCustomer(
 export function welcomeMail(name: string, email: string): Mail {
   const first = firstName(name)
   const href = `${siteUrl()}/book`
-  const intro = `Din profil er klar, og du logger ind med ${email}. Her kan du booke, flytte og aflyse dine tider, og du får en bekræftelse og en påmindelse på mail.`
+  const intro = `Your profile is ready, and you log in with ${email}. Here you can book, move and cancel your appointments, and you'll get a confirmation and a reminder by email.`
   return {
-    subject: `Velkommen til ${SALON_NAME}`,
-    text: [`Hej ${first}`, '', intro, '', `Book din første tid: ${href}`, '', SALON_NAME, SALON.address, `Tlf. ${SALON.phone}`].join('\n'),
+    subject: `Welcome to ${SALON_NAME}`,
+    text: [`Hi ${first}`, '', intro, '', `Book your first appointment: ${href}`, '', SALON_NAME, SALON.address, `Phone ${SALON.phone}`].join('\n'),
     html: layout({
-      preheader: 'Din profil er klar. Book din første tid.',
-      label: 'Velkommen',
-      heading: `Hej ${first}`,
+      preheader: 'Your profile is ready. Book your first appointment.',
+      label: 'Welcome',
+      heading: `Hi ${first}`,
       intro,
       contact: true,
-      button: { text: 'Book en tid', href },
-      footer: `Du får denne mail, fordi du har oprettet en profil hos ${SALON_NAME}.`,
+      button: { text: 'Book an appointment', href },
+      footer: `You're receiving this email because you created a profile at ${SALON_NAME}.`,
     }),
   }
 }
@@ -398,7 +398,7 @@ export async function sendWelcome(customer: { name: string; email: string }) {
   try {
     await sendMail(customer.email, welcomeMail(customer.name, customer.email))
   } catch (err) {
-    console.error('Kunne ikke sende velkomstmail', err)
+    console.error('Could not send welcome email', err)
   }
 }
 
@@ -410,11 +410,11 @@ export function bookingLink(serviceId: number | null, slot?: { date: string; sta
     q.set('date', slot.date)
     q.set('time', String(slot.start_min))
   }
-  const target = `/book${q.size ? `?${q}` : ''}${slot ? '#bekraeft' : ''}`
-  return `${siteUrl()}/log-ind?next=${encodeURIComponent(target)}`
+  const target = `/book${q.size ? `?${q}` : ''}${slot ? '#confirm' : ''}`
+  return `${siteUrl()}/login?next=${encodeURIComponent(target)}`
 }
 
-export const SICK_REASON = 'Sygdom'
+export const SICK_REASON = 'Illness'
 
 /** When the hairdresser cancels a whole day: the reason and the next free time. */
 export function dayCancelledMail(
@@ -426,40 +426,40 @@ export function dayCancelledMail(
   const first = firstName(name)
   const sick = reason === SICK_REASON
   const intro = sick
-    ? `Hej ${first}, din frisør er desværre blevet syg, så vi er nødt til at aflyse din tid. Vi beklager meget.`
-    : `Hej ${first}, vi er desværre nødt til at aflyse din tid. Vi beklager meget.`
+    ? `Hi ${first}, unfortunately your hairdresser is ill, so we have to cancel your appointment. We're very sorry.`
+    : `Hi ${first}, unfortunately we have to cancel your appointment. We're very sorry.`
   const bookHref = bookingLink(b.service_id, suggestion)
   const otherHref = bookingLink(b.service_id)
   return {
-    subject: `Din tid er aflyst: ${b.service_name}, ${fmtDate(b.date)} kl. ${fmtTime(b.start_min)}`,
+    subject: `Your appointment is cancelled: ${b.service_name}, ${fmtDate(b.date)} at ${fmtTime(b.start_min)}`,
     text: [
       intro,
-      sick ? '' : `Årsag: ${reason}`,
+      sick ? '' : `Reason: ${reason}`,
       '',
       `${b.service_name}, ${when(b)}`,
       '',
-      suggestion ? `Næste ledige tid: ${fmtDate(suggestion.date)} kl. ${fmtTime(suggestion.start_min)}` : '',
-      suggestion ? `Book den her: ${bookHref}` : `Book en ny tid her: ${otherHref}`,
+      suggestion ? `Next available time: ${fmtDate(suggestion.date)} at ${fmtTime(suggestion.start_min)}` : '',
+      suggestion ? `Book it here: ${bookHref}` : `Book a new appointment here: ${otherHref}`,
       '',
       SALON_NAME,
       SALON.address,
-      `Tlf. ${SALON.phone}`,
+      `Phone ${SALON.phone}`,
     ].join('\n'),
     html: layout({
       preheader: suggestion
-        ? `Næste ledige tid er ${fmtDate(suggestion.date)} kl. ${fmtTime(suggestion.start_min)}.`
-        : 'Book en ny tid, når det passer dig.',
-      label: 'Din tid er aflyst',
+        ? `The next available time is ${fmtDate(suggestion.date)} at ${fmtTime(suggestion.start_min)}.`
+        : 'Book a new appointment whenever it suits you.',
+      label: 'Your appointment is cancelled',
       heading: b.service_name,
       b: { ...b, note: undefined },
       cancelled: true,
       intro,
-      notice: sick ? undefined : `Årsag: ${reason}`,
+      notice: sick ? undefined : `Reason: ${reason}`,
       suggestion,
-      button: suggestion ? { text: 'Book den tid', href: bookHref } : { text: 'Book en ny tid', href: otherHref },
-      secondary: suggestion ? { text: 'Se andre ledige tider', href: otherHref } : undefined,
+      button: suggestion ? { text: 'Book this time', href: bookHref } : { text: 'Book a new appointment', href: otherHref },
+      secondary: suggestion ? { text: 'See other available times', href: otherHref } : undefined,
       contact: true,
-      footer: `Du får denne mail, fordi du havde en tid hos ${SALON_NAME}.`,
+      footer: `You're receiving this email because you had an appointment at ${SALON_NAME}.`,
     }),
   }
 }

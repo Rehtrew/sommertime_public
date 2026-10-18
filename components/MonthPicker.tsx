@@ -20,7 +20,7 @@ export function MonthPicker({
       <span className="text-[22px] whitespace-nowrap md:text-[28px]">{current?.label}</span>
       <ChevronDown size={20} className="mt-1 shrink-0" />
       <select
-        aria-label="Vælg måned"
+        aria-label="Choose month"
         className="absolute inset-0 cursor-pointer appearance-none opacity-0"
         value={value}
         onChange={(e) => router.push(hrefs[e.target.value], { scroll: false })}

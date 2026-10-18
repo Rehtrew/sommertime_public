@@ -14,7 +14,7 @@ const sans = Geist({
 
 export const metadata: Metadata = {
   title: { default: SALON.name, template: `%s · ${SALON.name}` },
-  description: 'Book din næste tid',
+  description: 'Book your next appointment',
   appleWebApp: { capable: true, title: SALON.name, statusBarStyle: 'default' },
 }
 
@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="da" className={sans.variable}>
+    <html lang="en" className={sans.variable}>
       <body>
         <DemoBar />
         {children}

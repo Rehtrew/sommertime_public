@@ -28,33 +28,33 @@ export default async function AdminHome() {
     <>
       <div className="px-2 pt-4 pb-6 md:pt-2">
         <p className="text-[20px] text-muted">{cap(fmtDate(t))}</p>
-        <h1 className="text-[48px] leading-none md:text-[72px]">Oversigt</h1>
+        <h1 className="text-[48px] leading-none md:text-[72px]">Overview</h1>
       </div>
 
       <div className="grid grid-cols-3 gap-2 md:gap-3">
-        <Link href="/admin/kalender" className="action-tile !bg-ink !text-white hover:opacity-90">
+        <Link href="/admin/calendar" className="action-tile !bg-ink !text-white hover:opacity-90">
           <CalendarPlus size={22} strokeWidth={1.8} />
-          Åbn tider
+          Opening hours
         </Link>
-        <Link href="/admin/booking/ny" className="action-tile !bg-ink !text-white hover:opacity-90">
+        <Link href="/admin/booking/new" className="action-tile !bg-ink !text-white hover:opacity-90">
           <Scissors size={22} strokeWidth={1.8} />
-          Book for kunde
+          Book for customer
         </Link>
-        <Link href="/admin/kunder?ny=1" className="action-tile !bg-ink !text-white hover:opacity-90">
+        <Link href="/admin/customers?new=1" className="action-tile !bg-ink !text-white hover:opacity-90">
           <UserPlus size={22} strokeWidth={1.8} />
-          Ny kunde
+          New customer
         </Link>
       </div>
 
       <div className="mt-2 grid grid-cols-3 gap-2 md:mt-3 md:gap-3">
-        <Stat label="I dag" value={todays.length} />
-        <Stat label="Denne uge" value={thisWeek} />
-        <Stat label="Kunder" value={customers} href="/admin/kunder" />
+        <Stat label="Today" value={todays.length} />
+        <Stat label="This week" value={thisWeek} />
+        <Stat label="Customers" value={customers} href="/admin/customers" />
       </div>
 
       <div className="mt-3 grid items-start gap-3 lg:grid-cols-2">
         <section className="card">
-          <h2 className="mb-4 text-[26px]">I dag</h2>
+          <h2 className="mb-4 text-[26px]">Today</h2>
           {todays.length ? (
             <div className="flex flex-col gap-2">
               {todays.map((b) => (
@@ -62,12 +62,12 @@ export default async function AdminHome() {
               ))}
             </div>
           ) : (
-            <p className="text-muted">Ingen bookinger i dag.</p>
+            <p className="text-muted">No bookings today.</p>
           )}
         </section>
 
         <section className="card">
-          <h2 className="mb-4 text-[26px]">Kommende</h2>
+          <h2 className="mb-4 text-[26px]">Upcoming</h2>
           {laterByDate.size ? (
             <div className="flex flex-col gap-5">
               {[...laterByDate.entries()].slice(0, 8).map(([date, list]) => (
@@ -84,13 +84,13 @@ export default async function AdminHome() {
               ))}
             </div>
           ) : (
-            <p className="text-muted">Ingen kommende bookinger endnu.</p>
+            <p className="text-muted">No upcoming bookings yet.</p>
           )}
         </section>
 
         <section className="card lg:col-span-2">
-          <h2 className="mb-1 text-[26px]">Åbne dage</h2>
-          <p className="mb-4 text-[15px] text-muted">De dage kunderne kan booke.</p>
+          <h2 className="mb-1 text-[26px]">Open days</h2>
+          <p className="mb-4 text-[15px] text-muted">The days customers can book.</p>
           {openDays.size ? (
             <ul className="grid gap-2 sm:grid-cols-2">
               {[...openDays.entries()].slice(0, 10).map(([date, ws]) => {
@@ -98,14 +98,14 @@ export default async function AdminHome() {
                 return (
                   <li key={date}>
                     <Link
-                      href={`/admin/kalender?date=${date}&dag=1`}
+                      href={`/admin/calendar?date=${date}&day=1`}
                       className="flex items-center justify-between gap-3 rounded-[20px] bg-tile p-4 hover:bg-tile-strong"
                     >
                       <span>
                         <span className="block text-[18px]">{cap(fmtDate(date))}</span>
                         <span className="block text-[15px] text-muted">
                           {ws.map((w) => `${fmtTime(w.start_min)}–${fmtTime(w.end_min)}`).join(', ')}
-                          {n ? ` · ${n} booket` : ''}
+                          {n ? ` · ${n} booked` : ''}
                         </span>
                       </span>
                       <ChevronRight size={20} className="text-muted" />
@@ -116,9 +116,9 @@ export default async function AdminHome() {
             </ul>
           ) : (
             <div className="rounded-[20px] bg-tile p-5">
-              <p>Du har ingen åbne tider endnu.</p>
-              <Link href="/admin/kalender" className="btn btn-sm mt-4">
-                Åbn for booking
+              <p>You have no opening hours yet.</p>
+              <Link href="/admin/calendar" className="btn btn-sm mt-4">
+                Open for booking
               </Link>
             </div>
           )}

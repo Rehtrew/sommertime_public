@@ -52,7 +52,7 @@ export function AvatarInput({ name, initial }: { name: string; initial: string |
         type="button"
         onClick={() => fileRef.current?.click()}
         className="relative rounded-full"
-        aria-label="Vælg profilbillede"
+        aria-label="Choose profile photo"
       >
         <Avatar name={name} src={src} size={96} />
         <span className="absolute -right-1 -bottom-1 flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white">
@@ -61,7 +61,7 @@ export function AvatarInput({ name, initial }: { name: string; initial: string |
       </button>
       <div className="flex flex-col items-start gap-1">
         <button type="button" className="btn btn-soft btn-sm" onClick={() => fileRef.current?.click()}>
-          {src ? 'Skift billede' : 'Tilføj billede'}
+          {src ? 'Change photo' : 'Add photo'}
         </button>
         {src && (
           <button
@@ -72,7 +72,7 @@ export function AvatarInput({ name, initial }: { name: string; initial: string |
               setValue('remove')
             }}
           >
-            Fjern billede
+            Remove photo
           </button>
         )}
       </div>

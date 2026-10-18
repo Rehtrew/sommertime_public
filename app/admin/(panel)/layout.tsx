@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <AdminNav variant="sidebar" />
         <form action={adminLogout} className="mt-auto">
           <button className="flex items-center gap-3 px-4 py-3 text-[16px] text-muted hover:text-ink">
-            <LogOut size={18} /> Log ud
+            <LogOut size={18} /> Log out
           </button>
         </form>
       </aside>
@@ -29,7 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             {SALON.name}
           </Link>
           <form action={adminLogout}>
-            <button className="flex h-11 w-11 items-center justify-center rounded-full bg-card" aria-label="Log ud">
+            <button className="flex h-11 w-11 items-center justify-center rounded-full bg-card" aria-label="Log out">
               <LogOut size={18} />
             </button>
           </form>

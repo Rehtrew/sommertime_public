@@ -1,6 +1,6 @@
-# Studio Saks
+# Sommertime
 
-A small, mobile-first booking system for a one-person hair salon with a handful of regular customers. No payments and no subscriptions: just opening hours, bookings, reminders and a customer list. The interface is in Danish.
+A small, mobile-first booking system for a one-person hair salon with a handful of regular customers. No payments and no subscriptions: just opening hours, bookings, reminders and a customer list.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FRehtrew%2Fsommertime_public)
 
@@ -11,7 +11,7 @@ The deploy button gives you a working demo with zero configuration.
 With no database configured, the app runs as a self-contained demo:
 
 - An in-memory Postgres ([PGlite](https://pglite.dev)) is filled with invented customers, bookings and opening hours around today's date.
-- The front page has one-click buttons: **Se som kunde** (see it as a customer) and **Se som frisør** (see it as the hairdresser).
+- A bar at the top of every page lets you switch between **View as customer** and **View as hairdresser** in one click.
 - Emails are not sent, but every email can be previewed from `/demo`.
 - Everything resets when the server restarts.
 
@@ -62,4 +62,4 @@ Next.js 16 (App Router, Server Actions), React 19, Tailwind CSS 4, Postgres on N
 
 ## Design
 
-Big type in a single font weight, no uppercase or letter-spacing, light grey surfaces and rounded corners. It is built for phones first, since that is where customers book. Dates and times are handled as Danish local time throughout.
+Big type in a single font weight, no uppercase or letter-spacing, light grey surfaces and rounded corners. It is built for phones first, since that is where customers book. Dates and times use the salon’s local time (Copenhagen) throughout, and prices are in Danish kroner.

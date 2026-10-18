@@ -14,18 +14,18 @@ export function BookingCard({ b, confirmCancel }: { b: Booking; confirmCancel: b
       <h2 className="mt-1 text-[34px] leading-[1.05] md:text-[44px]">{b.service_name}</h2>
 
       <div className="mt-6 grid grid-cols-3 gap-2">
-        <a href={`/api/kalender/${b.id}`} className="action-tile">
+        <a href={`/api/calendar/${b.id}`} className="action-tile">
           <CalendarPlus size={22} strokeWidth={1.8} />
-          Kalender
+          Calendar
         </a>
-        <Link href={`/book?flyt=${b.id}`} className="action-tile relative">
+        <Link href={`/book?move=${b.id}`} className="action-tile relative">
           <Pencil size={22} strokeWidth={1.8} />
-          Flyt tid
+          Reschedule
           <LinkPending />
         </Link>
-        <Link href={confirmCancel ? '/hjem' : `/hjem?aflys=${b.id}`} scroll={false} className="action-tile danger relative">
+        <Link href={confirmCancel ? '/home' : `/home?cancel=${b.id}`} scroll={false} className="action-tile danger relative">
           <Trash2 size={22} strokeWidth={1.8} />
-          Aflys
+          Cancel
           <LinkPending />
         </Link>
       </div>
@@ -35,14 +35,14 @@ export function BookingCard({ b, confirmCancel }: { b: Booking; confirmCancel: b
           <input type="hidden" name="id" value={b.id} />
           <div className="fade-in rounded-[22px] bg-danger-tile p-4">
             <p className="mb-3 text-danger">
-              Vil du aflyse {b.service_name.toLowerCase()} {fmtDate(b.date)} kl. {fmtTime(b.start_min)}?
+              Cancel {b.service_name.toLowerCase()} on {fmtDate(b.date)} at {fmtTime(b.start_min)}?
             </p>
             <div className="grid grid-cols-2 gap-2">
-              <Link href="/hjem" scroll={false} className="btn btn-white btn-sm">
-                Nej
+              <Link href="/home" scroll={false} className="btn btn-white btn-sm">
+                No
               </Link>
               <button type="submit" className="btn btn-sm !bg-danger">
-                Ja, aflys
+                Yes, cancel
               </button>
             </div>
           </div>
@@ -51,14 +51,14 @@ export function BookingCard({ b, confirmCancel }: { b: Booking; confirmCancel: b
 
       <div className="dashed mt-6 grid grid-cols-2">
         <div className="border-r-[1.5px] border-dashed border-line px-2 pt-5 text-center">
-          <p className="text-[15px] text-muted">Dato og tid</p>
+          <p className="text-[15px] text-muted">Date and time</p>
           <p className="mt-1 text-[24px] leading-tight">
             {fmtTime(b.start_min)}–{fmtTime(b.end_min)}
           </p>
           <p className="text-[15px] text-muted">{fmtDateShort(b.date)}</p>
         </div>
         <div className="px-2 pt-5 text-center">
-          <p className="text-[15px] text-muted">Varighed</p>
+          <p className="text-[15px] text-muted">Duration</p>
           <p className="mt-1 text-[24px] leading-tight">{fmtDuration(b.end_min - b.start_min)}</p>
           <p className="text-[15px] text-muted">{priceRange(b.price_from, b.price_to)}</p>
         </div>
@@ -72,7 +72,7 @@ export function BookingCard({ b, confirmCancel }: { b: Booking; confirmCancel: b
       >
         <MapPin size={20} strokeWidth={1.8} className="shrink-0" />
         <span className="min-w-0 flex-1">
-          <span className="block text-[14px] text-muted">Sted</span>
+          <span className="block text-[14px] text-muted">Location</span>
           <span className="block">{SALON.address}</span>
         </span>
         <ArrowUpRight size={18} className="shrink-0 text-muted" />

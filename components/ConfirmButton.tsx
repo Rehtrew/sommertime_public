@@ -9,8 +9,8 @@ import { useFormStatus } from 'react-dom'
  */
 export function ConfirmButton({
   children,
-  confirmText = 'Er du sikker?',
-  confirmLabel = 'Ja, fortsæt',
+  confirmText = 'Are you sure?',
+  confirmLabel = 'Yes, continue',
   className = 'btn btn-danger w-full',
 }: {
   children: React.ReactNode
@@ -33,10 +33,10 @@ export function ConfirmButton({
       <p className="mb-3 text-danger">{confirmText}</p>
       <div className="grid grid-cols-2 gap-2">
         <button type="button" className="btn btn-white btn-sm" onClick={() => setAsking(false)} disabled={pending}>
-          Nej
+          No
         </button>
         <button type="submit" className="btn btn-sm !bg-danger" disabled={pending}>
-          {pending ? 'Vent…' : confirmLabel}
+          {pending ? 'Wait…' : confirmLabel}
         </button>
       </div>
     </div>

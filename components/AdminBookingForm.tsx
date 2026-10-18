@@ -27,10 +27,10 @@ export async function AdminBookingForm({
   return (
     <ActionForm action={saveBooking} className="flex flex-col gap-4">
       {booking && <input type="hidden" name="id" value={booking.id} />}
-      <Field label="Kunde">
+      <Field label="Customer">
         <select name="customer" className="input" defaultValue={booking?.customer_id ?? customerId ?? ''} required>
           <option value="" disabled>
-            Vælg kunde
+            Choose customer
           </option>
           {customers.map((c) => (
             <option key={c.id} value={c.id}>
@@ -39,10 +39,10 @@ export async function AdminBookingForm({
           ))}
         </select>
       </Field>
-      <Field label="Behandling">
+      <Field label="Treatment">
         <select name="service" className="input" defaultValue={booking?.service_id ?? ''} required>
           <option value="" disabled>
-            Vælg behandling
+            Choose treatment
           </option>
           {categories.map((cat) => (
             <optgroup key={cat} label={cat}>
@@ -51,7 +51,7 @@ export async function AdminBookingForm({
                 .map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name} · {fmtDuration(s.duration_min)}
-                    {s.active ? '' : ' (skjult)'}
+                    {s.active ? '' : ' (hidden)'}
                   </option>
                 ))}
             </optgroup>
@@ -59,10 +59,10 @@ export async function AdminBookingForm({
         </select>
       </Field>
       <div className="grid grid-cols-2 gap-2">
-        <Field label="Dato">
+        <Field label="Date">
           <input className="input" type="date" name="date" defaultValue={booking?.date ?? date} required />
         </Field>
-        <Field label="Tidspunkt">
+        <Field label="Time">
           <input
             className="input"
             type="time"
@@ -73,7 +73,7 @@ export async function AdminBookingForm({
           />
         </Field>
       </div>
-      <Field label="Varighed i minutter (valgfrit)" hint="Lad feltet stå tomt for at bruge behandlingens varighed.">
+      <Field label="Duration in minutes (optional)" hint="Leave empty to use the treatment's duration.">
         <input
           className="input"
           type="number"
@@ -91,12 +91,12 @@ export async function AdminBookingForm({
       <label className="flex items-start gap-3 px-1">
         <input type="checkbox" name="notify" defaultChecked className="mt-0.5 h-6 w-6 shrink-0 accent-ink" />
         <span>
-          {booking ? 'Giv kunden besked på mail, hvis tiden ændres' : 'Send bekræftelse til kunden på mail'}
-          <span className="block text-[14px] text-muted">Kun hvis kunden har en e-mail.</span>
+          {booking ? 'Email the customer if the appointment changes' : 'Email a confirmation to the customer'}
+          <span className="block text-[14px] text-muted">Only if the customer has an email.</span>
         </span>
       </label>
-      <SubmitButton className="btn" pendingText="Gemmer…">
-        {booking ? 'Gem ændringer' : 'Book tid'}
+      <SubmitButton className="btn" pendingText="Saving…">
+        {booking ? 'Save changes' : 'Book appointment'}
       </SubmitButton>
     </ActionForm>
   )

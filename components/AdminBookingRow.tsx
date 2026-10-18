@@ -19,7 +19,7 @@ export function AdminBookingRow({ b, showDate, hideCustomer }: { b: Booking; sho
           {fmtTime(b.start_min)}–{fmtTime(b.end_min)}
         </span>
         <span className="block truncate text-[19px] leading-snug">
-          {hideCustomer ? b.service_name : (b.customer_name ?? 'Slettet kunde')}
+          {hideCustomer ? b.service_name : (b.customer_name ?? 'Deleted customer')}
         </span>
         {!hideCustomer && <span className="block truncate text-[15px] text-muted">{b.service_name}</span>}
         {b.note && <span className="mt-1 block truncate text-[14px] text-muted">“{b.note}”</span>}

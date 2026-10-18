@@ -32,15 +32,15 @@ export async function signup(_: FormState, fd: FormData): Promise<FormState> {
   const name = str(fd, 'name')
   const email = str(fd, 'email').toLowerCase()
   const password = String(fd.get('password') ?? '')
-  if (!name) return { error: 'Skriv dit navn.' }
-  if (!EMAIL_RE.test(email)) return { error: 'Skriv en gyldig e-mail.' }
-  if (password.length < 6) return { error: 'Adgangskoden skal være mindst 6 tegn.' }
+  if (!name) return { error: 'Enter your name.' }
+  if (!EMAIL_RE.test(email)) return { error: 'Enter a valid email.' }
+  if (password.length < 6) return { error: 'The password must be at least 6 characters.' }
 
   const hash = await hashPassword(password)
   const existing = await findByIdentifier({ email })
   let customerId: number
   if (existing) {
-    if (existing.password_hash) return { error: 'Der findes allerede en profil med den oplysning. Log ind i stedet.' }
+    if (existing.password_hash) return { error: 'There is already a profile with that email. Log in instead.' }
     // The salon created this customer already: let them take over the profile.
     await query('UPDATE customers SET password_hash = $1, name = $2 WHERE id = $3', [hash, name, existing.id])
     customerId = existing.id
@@ -53,20 +53,20 @@ export async function signup(_: FormState, fd: FormData): Promise<FormState> {
   }
   await startCustomerSession(customerId)
   after(() => sendWelcome({ name, email }))
-  redirect('/profil?ny=1')
+  redirect('/profile?new=1')
 }
 
 export async function login(_: FormState, fd: FormData): Promise<FormState> {
   // Email is the way in. Phone still works for profiles created before email became required.
   const id = parseIdentifier(str(fd, 'identifier'))
   const password = String(fd.get('password') ?? '')
-  const fail = { error: 'Forkert e-mail eller adgangskode.' }
+  const fail = { error: 'Incorrect email or password.' }
   if (!id) return fail
   const customer = await findByIdentifier(id)
   if (!customer || !(await verifyPassword(password, customer.password_hash))) return fail
   await startCustomerSession(customer.id)
   const next = str(fd, 'next')
-  redirect(next.startsWith('/') && !next.startsWith('//') ? next : '/hjem')
+  redirect(next.startsWith('/') && !next.startsWith('//') ? next : '/home')
 }
 
 export async function logout() {
@@ -79,17 +79,17 @@ export async function updateProfile(_: FormState, fd: FormData): Promise<FormSta
   const name = str(fd, 'name')
   const emailRaw = str(fd, 'email').toLowerCase()
   const phoneRaw = str(fd, 'phone')
-  if (!name) return { error: 'Skriv dit navn.' }
-  if (!EMAIL_RE.test(emailRaw)) return { error: 'Skriv din e-mail. Det er den, du logger ind med og får besked på.' }
+  if (!name) return { error: 'Enter your name.' }
+  if (!EMAIL_RE.test(emailRaw)) return { error: "Enter your email. It's what you log in with and where we send your updates." }
   const phone = phoneRaw ? normalizePhone(phoneRaw) : null
-  if (phoneRaw && !phone) return { error: 'Telefonnummeret ser ikke rigtigt ud.' }
+  if (phoneRaw && !phone) return { error: "That phone number doesn't look right." }
   const email = emailRaw
 
   const clash = await one<{ id: number }>(
     'SELECT id FROM customers WHERE id <> $1 AND ((email IS NOT NULL AND email = $2) OR (phone IS NOT NULL AND phone = $3))',
     [me.id, email, phone],
   )
-  if (clash) return { error: 'E-mail eller telefon bruges allerede af en anden profil.' }
+  if (clash) return { error: 'That email or phone number is already used by another profile.' }
 
   const avatar = String(fd.get('avatar') ?? '')
   let avatarValue = me.avatar
@@ -104,17 +104,17 @@ export async function updateProfile(_: FormState, fd: FormData): Promise<FormSta
     me.id,
   ])
   revalidatePath('/', 'layout')
-  return { ok: 'Dine oplysninger er gemt.' }
+  return { ok: 'Your details have been saved.' }
 }
 
 export async function changePassword(_: FormState, fd: FormData): Promise<FormState> {
   const me = await requireCustomer()
   const current = String(fd.get('current') ?? '')
   const next = String(fd.get('password') ?? '')
-  if (!(await verifyPassword(current, me.password_hash))) return { error: 'Den nuværende adgangskode er forkert.' }
-  if (next.length < 6) return { error: 'Den nye adgangskode skal være mindst 6 tegn.' }
+  if (!(await verifyPassword(current, me.password_hash))) return { error: 'Your current password is incorrect.' }
+  if (next.length < 6) return { error: 'The new password must be at least 6 characters.' }
   await query('UPDATE customers SET password_hash = $1 WHERE id = $2', [await hashPassword(next), me.id])
-  return { ok: 'Din adgangskode er skiftet.' }
+  return { ok: 'Your password has been changed.' }
 }
 
 export async function deleteProfile() {
@@ -123,12 +123,12 @@ export async function deleteProfile() {
   await query('DELETE FROM bookings WHERE customer_id = $1 AND date >= $2', [me.id, today()])
   await query('DELETE FROM customers WHERE id = $1', [me.id])
   await endCustomerSession()
-  redirect('/?slettet=1')
+  redirect('/?deleted=1')
 }
 
 export async function book(_: FormState, fd: FormData): Promise<FormState> {
   const me = await getCustomer()
-  if (!me) redirect('/log-ind')
+  if (!me) redirect('/login')
   const serviceId = Number(fd.get('service'))
   const date = str(fd, 'date')
   const start = Number(fd.get('time'))
@@ -136,23 +136,23 @@ export async function book(_: FormState, fd: FormData): Promise<FormState> {
   const moveId = Number(fd.get('move')) || undefined
 
   const service = await getService(serviceId)
-  if (!service || !service.active || !isDate(date) || !Number.isInteger(start)) return { error: 'Noget gik galt. Prøv igen.' }
+  if (!service || !service.active || !isDate(date) || !Number.isInteger(start)) return { error: 'Something went wrong. Please try again.' }
 
   let moving: Booking | undefined
   if (moveId) {
     moving = await getBooking(moveId)
     if (!moving || moving.customer_id !== me.id || moving.status !== 'booked' || !isUpcoming(moving)) {
-      return { error: 'Bookingen kan ikke flyttes.' }
+      return { error: "This booking can't be moved." }
     }
   }
 
   // Re-check against the live calendar, someone may have taken the time meanwhile.
   const slots = await freeSlots(service.duration_min, moveId)
   if (!slots.get(date)?.includes(start)) {
-    return { error: 'Tiden er desværre ikke ledig længere. Vælg en anden.' }
+    return { error: 'Sorry, that time is no longer available. Please choose another.' }
   }
   const end = start + service.duration_min
-  if (await findOverlap(date, start, end, moveId)) return { error: 'Tiden er desværre ikke ledig længere. Vælg en anden.' }
+  if (await findOverlap(date, start, end, moveId)) return { error: 'Sorry, that time is no longer available. Please choose another.' }
 
   let bookingId: number
   if (moving) {
@@ -182,21 +182,21 @@ export async function book(_: FormState, fd: FormData): Promise<FormState> {
   }
   after(() =>
     Promise.all([
-      notifyAdmin(moving ? 'flyttet' : 'ny', me.name, info),
-      notifyCustomer(moving ? 'flyttet' : 'booket', me, info),
+      notifyAdmin(moving ? 'moved' : 'new', me.name, info),
+      notifyCustomer(moving ? 'moved' : 'booked', me, info),
     ]),
   )
-  revalidatePath('/hjem')
-  redirect(`/hjem?${moving ? 'flyttet' : 'booket'}=${bookingId}`)
+  revalidatePath('/home')
+  redirect(`/home?${moving ? 'moved' : 'booked'}=${bookingId}`)
 }
 
 export async function cancelBooking(fd: FormData) {
   const me = await requireCustomer()
   const id = Number(fd.get('id'))
   const b = await getBooking(id)
-  if (!b || b.customer_id !== me.id || b.status !== 'booked' || !isUpcoming(b)) redirect('/hjem')
+  if (!b || b.customer_id !== me.id || b.status !== 'booked' || !isUpcoming(b)) redirect('/home')
   await query(`UPDATE bookings SET status = 'cancelled', cancelled_by = 'customer' WHERE id = $1`, [id])
-  after(() => Promise.all([notifyAdmin('aflyst', me.name, b), notifyCustomer('aflyst', me, b)]))
-  revalidatePath('/hjem')
-  redirect('/hjem?aflyst=1')
+  after(() => Promise.all([notifyAdmin('cancelled', me.name, b), notifyCustomer('cancelled', me, b)]))
+  revalidatePath('/home')
+  redirect('/home?cancelled=1')
 }

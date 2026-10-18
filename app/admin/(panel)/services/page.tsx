@@ -9,7 +9,7 @@ import { categoryColor, priceRange } from '@/lib/format'
 import { fmtDuration } from '@/lib/time'
 import { createService, deleteService, moveCategory, moveService, updateService } from '@/app/actions/admin'
 
-export const metadata: Metadata = { title: 'Ydelser' }
+export const metadata: Metadata = { title: 'Services' }
 
 export default async function ServicesPage() {
   const services = await getServices(true)
@@ -18,23 +18,23 @@ export default async function ServicesPage() {
   return (
     <>
       <div className="px-2 pt-4 pb-6 md:pt-2">
-        <h1 className="text-[48px] leading-none md:text-[72px]">Ydelser</h1>
+        <h1 className="text-[48px] leading-none md:text-[72px]">Services</h1>
         <p className="mt-3 text-muted">
-          Det kunderne kan vælge imellem, når de booker. Kategorien øverst vises først, når de booker.
+          What customers can choose from when they book. The top category is shown first.
         </p>
       </div>
 
       <details className="card group mb-3">
         <summary className="flex cursor-pointer list-none items-center justify-between text-[20px] [&::-webkit-details-marker]:hidden">
-          Ny ydelse
+          New service
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-tile transition-transform group-open:rotate-45">
             <Plus size={20} />
           </span>
         </summary>
         <ActionForm action={createService} className="mt-5 flex flex-col gap-4">
           <ServiceFields categories={categories} />
-          <SubmitButton className="btn" pendingText="Gemmer…">
-            Opret ydelse
+          <SubmitButton className="btn" pendingText="Saving…">
+            Add service
           </SubmitButton>
         </ActionForm>
       </details>
@@ -63,7 +63,7 @@ export default async function ServicesPage() {
                       <button
                         className="flex h-10 w-10 items-center justify-center rounded-full bg-tile hover:bg-tile-strong disabled:opacity-30"
                         disabled={dir === 'up' ? ci === 0 : ci === categories.length - 1}
-                        aria-label={dir === 'up' ? `Flyt ${cat} op` : `Flyt ${cat} ned`}
+                        aria-label={dir === 'up' ? `Move ${cat} up` : `Move ${cat} down`}
                       >
                         {dir === 'up' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                       </button>
@@ -79,7 +79,7 @@ export default async function ServicesPage() {
                         <span className="min-w-0 flex-1">
                           <span className={`block text-[18px] leading-snug ${s.active ? '' : 'text-muted'}`}>
                             {s.name}
-                            {!s.active && <span className="ml-2 rounded-full bg-tile-strong px-2 py-0.5 text-[13px]">skjult</span>}
+                            {!s.active && <span className="ml-2 rounded-full bg-tile-strong px-2 py-0.5 text-[13px]">hidden</span>}
                           </span>
                           <span className="block text-[15px] text-muted">
                             {fmtDuration(s.duration_min)} · {priceRange(s.price_from, s.price_to)}
@@ -91,33 +91,33 @@ export default async function ServicesPage() {
                         <ActionForm action={updateService} className="flex flex-col gap-4">
                           <input type="hidden" name="id" value={s.id} />
                           <ServiceFields service={s} categories={categories} white />
-                          <SubmitButton className="btn" pendingText="Gemmer…">
-                            Gem
+                          <SubmitButton className="btn" pendingText="Saving…">
+                            Save
                           </SubmitButton>
                         </ActionForm>
                         <div className="mt-3 flex gap-2">
                           <form action={moveService}>
                             <input type="hidden" name="id" value={s.id} />
                             <input type="hidden" name="dir" value="up" />
-                            <button className="btn btn-white btn-sm" disabled={i === 0} aria-label="Flyt op">
-                              <ChevronUp size={18} /> Op
+                            <button className="btn btn-white btn-sm" disabled={i === 0} aria-label="Move up">
+                              <ChevronUp size={18} /> Up
                             </button>
                           </form>
                           <form action={moveService}>
                             <input type="hidden" name="id" value={s.id} />
                             <input type="hidden" name="dir" value="down" />
-                            <button className="btn btn-white btn-sm" disabled={i === list.length - 1} aria-label="Flyt ned">
-                              <ChevronDown size={18} /> Ned
+                            <button className="btn btn-white btn-sm" disabled={i === list.length - 1} aria-label="Move down">
+                              <ChevronDown size={18} /> Down
                             </button>
                           </form>
                         </div>
                         <form action={deleteService} className="mt-3">
                           <input type="hidden" name="id" value={s.id} />
                           <ConfirmButton
-                            confirmText="Ydelsen slettes. Eksisterende bookinger beholdes. Vil du hellere skjule den, så fjern fluebenet ved “Kan bookes af kunder”."
-                            confirmLabel="Slet"
+                            confirmText="The service will be deleted. Existing bookings are kept. To hide it instead, untick “Bookable by customers”."
+                            confirmLabel="Delete"
                           >
-                            Slet ydelse
+                            Delete service
                           </ConfirmButton>
                         </form>
                       </div>
@@ -137,17 +137,17 @@ function ServiceFields({ service, categories, white }: { service?: Service; cate
   const cls = `input ${white ? '!bg-white' : ''}`
   return (
     <>
-      <Field label="Navn">
+      <Field label="Name">
         <input className={cls} name="name" defaultValue={service?.name} required />
       </Field>
-      <Field label="Kategori" hint={`Fx ${categories.slice(0, 3).join(', ')}`}>
+      <Field label="Category" hint={`E.g. ${categories.slice(0, 3).join(', ')}`}>
         <input className={cls} name="category" list="categories" defaultValue={service?.category} required />
       </Field>
-      <Field label="Beskrivelse">
+      <Field label="Description">
         <textarea className={cls} name="description" defaultValue={service?.description} />
       </Field>
       <div className="grid grid-cols-3 gap-2">
-        <Field label="Minutter">
+        <Field label="Minutes">
           <input
             className={cls}
             name="duration"
@@ -160,17 +160,17 @@ function ServiceFields({ service, categories, white }: { service?: Service; cate
             required
           />
         </Field>
-        <Field label="Pris fra">
+        <Field label="Price from">
           <input className={cls} name="price_from" type="number" min={0} inputMode="numeric" defaultValue={service?.price_from} required />
         </Field>
-        <Field label="Pris til">
+        <Field label="Price to">
           <input className={cls} name="price_to" type="number" min={0} inputMode="numeric" defaultValue={service?.price_to ?? ''} />
         </Field>
       </div>
       {service && (
         <label className="flex items-center gap-3 px-1">
           <input type="checkbox" name="active" defaultChecked={service.active} className="h-6 w-6 accent-ink" />
-          Kan bookes af kunder
+          Bookable by customers
         </label>
       )}
     </>

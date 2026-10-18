@@ -1,5 +1,5 @@
 // All dates are stored as 'YYYY-MM-DD' and times as minutes after midnight,
-// in Danish local time. That keeps the calendar free of time zone surprises.
+// in the salon's local time (Copenhagen). That keeps the calendar free of time zone surprises.
 
 export const TZ = 'Europe/Copenhagen'
 export const SLOT_STEP = 15
@@ -68,25 +68,25 @@ export function parseTime(s: unknown) {
 }
 
 function fmt(date: string, opts: Intl.DateTimeFormatOptions) {
-  return new Intl.DateTimeFormat('da-DK', { timeZone: 'UTC', ...opts }).format(new Date(`${date}T12:00:00Z`))
+  return new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', ...opts }).format(new Date(`${date}T12:00:00Z`))
 }
 
-/** "tirsdag 20. oktober" */
+/** "Tuesday 20 October" */
 export function fmtDate(date: string) {
   return fmt(date, { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
-/** "20. okt. 2026" */
+/** "20 Oct 2026" */
 export function fmtDateShort(date: string) {
   return fmt(date, { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-/** "oktober 2026" */
+/** "October 2026" */
 export function fmtMonth(date: string) {
   return fmt(date, { month: 'long', year: 'numeric' })
 }
 
-/** "tir" */
+/** "Tue" */
 export function fmtWeekdayShort(date: string) {
   return fmt(date, { weekday: 'short' }).replace('.', '')
 }
@@ -95,15 +95,15 @@ export function dayNumber(date: string) {
   return Number(date.slice(8, 10))
 }
 
-/** "I dag", "I morgen", "Om 3 dage", "Torsdag" … */
+/** "Today", "Tomorrow", "In 3 days", "In a week" … */
 export function relativeDay(date: string) {
   const n = daysBetween(today(), date)
-  if (n === 0) return 'I dag'
-  if (n === 1) return 'I morgen'
-  if (n === -1) return 'I går'
-  if (n > 1 && n < 7) return `Om ${n} dage`
-  if (n >= 7 && n < 14) return 'Om en uge'
-  if (n >= 14) return `Om ${Math.floor(n / 7)} uger`
+  if (n === 0) return 'Today'
+  if (n === 1) return 'Tomorrow'
+  if (n === -1) return 'Yesterday'
+  if (n > 1 && n < 7) return `In ${n} days`
+  if (n >= 7 && n < 14) return 'In a week'
+  if (n >= 14) return `In ${Math.floor(n / 7)} weeks`
   return fmtDateShort(date)
 }
 
@@ -111,7 +111,7 @@ export function fmtDuration(min: number) {
   if (min < 60) return `${min} min`
   const h = Math.floor(min / 60)
   const m = min % 60
-  return m ? `${h} t ${m} min` : `${h} time${h > 1 ? 'r' : ''}`
+  return m ? `${h} h ${m} min` : `${h} hour${h > 1 ? 's' : ''}`
 }
 
 /** Converts Danish local date + minutes to a UTC Date (for calendar files). */
@@ -135,16 +135,16 @@ export function isoWeek(date: string) {
   return Math.floor((d.getTime() - yearStart) / 86400000 / 7) + 1
 }
 
-/** "oktober" or "okt" */
+/** "October" or "Oct" */
 export function fmtMonthName(date: string, style: 'long' | 'short' = 'long') {
   return fmt(date, { month: style }).replace('.', '')
 }
 
-/** "12.–18. oktober" or "28. sep–4. okt" */
+/** "12–18 October" or "28 Sep–4 Oct" */
 export function fmtWeekRange(from: string, to: string) {
   return from.slice(0, 7) === to.slice(0, 7)
-    ? `${dayNumber(from)}.–${dayNumber(to)}. ${fmtMonthName(to)}`
-    : `${dayNumber(from)}. ${fmtMonthName(from, 'short')}–${dayNumber(to)}. ${fmtMonthName(to, 'short')}`
+    ? `${dayNumber(from)}–${dayNumber(to)} ${fmtMonthName(to)}`
+    : `${dayNumber(from)} ${fmtMonthName(from, 'short')}–${dayNumber(to)} ${fmtMonthName(to, 'short')}`
 }
 
 /** "10–17" when on the hour, otherwise "10:30–17" */

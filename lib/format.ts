@@ -1,11 +1,12 @@
-const nf = new Intl.NumberFormat('da-DK')
+const nf = new Intl.NumberFormat('en-GB')
 
+/** Prices are in Danish kroner: "DKK 739" */
 export function kr(n: number) {
-  return `${nf.format(n)} kr.`
+  return `DKK ${nf.format(n)}`
 }
 
 export function priceRange(from: number, to: number | null | undefined) {
-  return to && to !== from ? `${nf.format(from)}–${nf.format(to)} kr.` : kr(from)
+  return to && to !== from ? `DKK ${nf.format(from)}–${nf.format(to)}` : kr(from)
 }
 
 export function firstName(name: string) {
@@ -22,16 +23,16 @@ export function initials(name: string) {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Dame: '#ff3f8e',
-  Herre: '#3f6fe0',
-  Farve: '#ff8a1f',
+  Women: '#8b6cf0',
+  Men: '#3f6fe0',
+  Colour: '#ff8a1f',
 }
 
 export function categoryColor(category: string) {
   return CATEGORY_COLORS[category] ?? '#b9b2f0'
 }
 
-/** Sentence case for text that starts with a weekday, e.g. "tirsdag" → "Tirsdag". */
+/** Sentence case: upper-cases the first letter. */
 export function cap(s: string) {
-  return s.charAt(0).toLocaleUpperCase('da-DK') + s.slice(1)
+  return s.charAt(0).toLocaleUpperCase('en-GB') + s.slice(1)
 }

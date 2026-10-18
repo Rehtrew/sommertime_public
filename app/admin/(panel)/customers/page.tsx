@@ -10,7 +10,7 @@ import { fmtPhone } from '@/lib/auth'
 import { fmtDateShort, nowCph } from '@/lib/time'
 import { createCustomer } from '@/app/actions/admin'
 
-export const metadata: Metadata = { title: 'Kunder' }
+export const metadata: Metadata = { title: 'Customers' }
 
 type Row = {
   id: number
@@ -22,7 +22,7 @@ type Row = {
   next_date: string | null
 }
 
-export default async function CustomersPage(props: PageProps<'/admin/kunder'>) {
+export default async function CustomersPage(props: PageProps<'/admin/customers'>) {
   const sp = await props.searchParams
   const q = typeof sp.q === 'string' ? sp.q.trim() : ''
   const now = nowCph()
@@ -41,37 +41,37 @@ export default async function CustomersPage(props: PageProps<'/admin/kunder'>) {
   return (
     <>
       <div className="flex items-end justify-between gap-4 px-2 pt-4 pb-6 md:pt-2">
-        <h1 className="text-[48px] leading-none md:text-[72px]">Kunder</h1>
+        <h1 className="text-[48px] leading-none md:text-[72px]">Customers</h1>
         <span className="pb-1 text-[20px] text-muted">{rows.length}</span>
       </div>
 
-      <details className="card group mb-3" open={sp.ny === '1'}>
+      <details className="card group mb-3" open={sp.new === '1'}>
         <summary className="flex cursor-pointer list-none items-center justify-between text-[20px] [&::-webkit-details-marker]:hidden">
-          Opret kunde
+          Add customer
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-tile transition-transform group-open:rotate-45">
             <Plus size={20} />
           </span>
         </summary>
         <ActionForm action={createCustomer} className="mt-5 flex flex-col gap-4">
-          <Field label="Navn">
+          <Field label="Name">
             <input className="input" name="name" required />
           </Field>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="E-mail">
+            <Field label="Email">
               <input className="input" name="email" type="email" />
             </Field>
-            <Field label="Telefon">
+            <Field label="Phone">
               <input className="input" name="phone" type="tel" />
             </Field>
           </div>
-          <Field label="Noter" hint="Kun synlige for dig. Fx farveopskrift eller ønsker.">
+          <Field label="Notes" hint="Only visible to you. E.g. colour formula or wishes.">
             <textarea className="input" name="notes" />
           </Field>
           <p className="ml-1 text-[14px] text-muted">
-            Kunden kan senere selv oprette en profil med samme e-mail og overtager så sin historik.
+            The customer can later create a profile with the same email and take over their history.
           </p>
-          <SubmitButton className="btn" pendingText="Opretter…">
-            Opret kunde
+          <SubmitButton className="btn" pendingText="Adding…">
+            Add customer
           </SubmitButton>
         </ActionForm>
       </details>
@@ -82,29 +82,29 @@ export default async function CustomersPage(props: PageProps<'/admin/kunder'>) {
           className="input !bg-card !pl-13"
           name="q"
           defaultValue={q}
-          placeholder="Søg på navn, e-mail eller telefon"
+          placeholder="Search by name, email or phone"
           type="search"
         />
       </form>
 
       <section className="card !p-2 md:!p-3">
         {rows.length === 0 ? (
-          <p className="p-4 text-muted">{q ? 'Ingen kunder matcher søgningen.' : 'Ingen kunder endnu.'}</p>
+          <p className="p-4 text-muted">{q ? 'No customers match your search.' : 'No customers yet.'}</p>
         ) : (
           <ul>
             {rows.map((c) => (
               <li key={c.id}>
-                <Link href={`/admin/kunder/${c.id}`} className="flex items-center gap-4 rounded-[20px] p-3 hover:bg-tile">
+                <Link href={`/admin/customers/${c.id}`} className="flex items-center gap-4 rounded-[20px] p-3 hover:bg-tile">
                   <Avatar name={c.name} src={c.avatar} size={52} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[19px] leading-snug">{c.name}</span>
                     <span className="block truncate text-[15px] text-muted">
-                      {[c.phone && fmtPhone(c.phone), c.email].filter(Boolean).join(' · ') || 'Ingen kontaktinfo'}
+                      {[c.phone && fmtPhone(c.phone), c.email].filter(Boolean).join(' · ') || 'No contact info'}
                     </span>
                   </span>
                   <span className="hidden shrink-0 text-right text-[15px] text-muted sm:block">
-                    {c.visits} besøg
-                    {c.next_date && <span className="block text-ink">Næste {fmtDateShort(c.next_date)}</span>}
+                    {c.visits} {c.visits === 1 ? 'visit' : 'visits'}
+                    {c.next_date && <span className="block text-ink">Next {fmtDateShort(c.next_date)}</span>}
                   </span>
                   <ChevronRight size={20} className="shrink-0 text-muted" />
                 </Link>

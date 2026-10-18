@@ -5,8 +5,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: SALON.name,
     short_name: SALON.name,
-    description: 'Book din næste tid',
-    start_url: '/hjem',
+    description: 'Book your next appointment',
+    start_url: '/home',
     display: 'standalone',
     background_color: '#ededed',
     theme_color: '#ededed',

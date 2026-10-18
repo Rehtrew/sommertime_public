@@ -6,28 +6,28 @@ import { addDays, today, weekday } from './time'
 
 export const DEMO = !(process.env.DATABASE_URL || process.env.POSTGRES_URL)
 
-/** The customer you become with "Se som kunde". */
+/** The customer you become with "View as customer". */
 export const DEMO_CUSTOMER_EMAIL = 'ida@example.com'
 
 type Query = (text: string, params?: unknown[]) => Promise<unknown>
 
-// All people, emails and numbers are invented. Numbers starting with 1 are not used for Danish subscribers.
+// All people, emails and numbers are invented. Danish numbers starting with 1 are not given to subscribers.
 const CUSTOMERS: { name: string; email: string | null; phone: string | null; notes: string; prefs: number[]; lapsed?: boolean }[] = [
-  { name: 'Ida Holm', email: DEMO_CUSTOMER_EMAIL, phone: '+4512345601', notes: 'Farve 8.1 + 6 % i bunden, 35 min. Kort i nakken.', prefs: [0, 14] },
-  { name: 'Freja Lund', email: 'freja@example.com', phone: null, notes: 'Balayage hvert halve år. Følsom hovedbund.', prefs: [5, 6, 0] },
+  { name: 'Ida Holm', email: DEMO_CUSTOMER_EMAIL, phone: '+4512345601', notes: 'Colour 8.1 + 6 % at the roots, 35 min. Short at the neck.', prefs: [0, 14] },
+  { name: 'Freja Lund', email: 'freja@example.com', phone: null, notes: 'Balayage every six months. Sensitive scalp.', prefs: [5, 6, 0] },
   { name: 'Mads Kjær', email: 'mads@example.com', phone: '+4512345603', notes: '', prefs: [2, 3] },
-  { name: 'Sofie Bak', email: 'sofie@example.com', phone: '+4512345604', notes: 'Pandehår hver 4. uge.', prefs: [1, 0] },
-  { name: 'Emil Krogh', email: 'emil@example.com', phone: null, notes: 'Nr. 2 på siderne.', prefs: [4, 2] },
+  { name: 'Sofie Bak', email: 'sofie@example.com', phone: '+4512345604', notes: 'Fringe every 4 weeks.', prefs: [1, 0] },
+  { name: 'Emil Krogh', email: 'emil@example.com', phone: null, notes: 'No. 2 on the sides.', prefs: [4, 2] },
   { name: 'Clara Vinter', email: 'clara@example.com', phone: '+4512345606', notes: '', prefs: [0, 11] },
-  { name: 'Noah Friis', email: null, phone: '+4512345607', notes: 'Har ingen e-mail. Ring hellere.', prefs: [2] },
-  { name: 'Alma Dahl', email: 'alma@example.com', phone: null, notes: 'Reflekser, toning 9.12.', prefs: [7, 9, 0] },
+  { name: 'Noah Friis', email: null, phone: '+4512345607', notes: 'No email. Call instead.', prefs: [2] },
+  { name: 'Alma Dahl', email: 'alma@example.com', phone: null, notes: 'Highlights, toner 9.12.', prefs: [7, 9, 0] },
   { name: 'Karla Bech', email: 'karla@example.com', phone: '+4512345609', notes: '', prefs: [0, 12] },
   { name: 'Oscar Lind', email: 'oscar@example.com', phone: null, notes: '', prefs: [2, 3] },
   { name: 'Asta Møller', email: 'asta@example.com', phone: '+4512345611', notes: '', prefs: [0], lapsed: true },
   { name: 'Viggo Brandt', email: 'viggo@example.com', phone: null, notes: '', prefs: [2], lapsed: true },
 ]
 
-const NOTES = ['Gerne lidt kortere end sidst.', 'Jeg kommer måske 5 min. for sent.', 'Vil gerne prøve noget nyt!']
+const NOTES = ['A bit shorter than last time, please.', 'I might be 5 minutes late.', "I'd like to try something new!"]
 
 /** Small seeded random generator, so the sample data looks the same every time. */
 function rng(seed: number) {
@@ -53,7 +53,7 @@ export async function seedDemo(query: Query) {
     )
   }
 
-  // Opening hours: tuesday to saturday, three months back and four weeks ahead.
+  // Opening hours: Tuesday to Saturday, three months back and four weeks ahead.
   const openDays: string[] = []
   for (let d = addDays(t, -90); d <= addDays(t, 28); d = addDays(d, 1)) {
     const wd = weekday(d)

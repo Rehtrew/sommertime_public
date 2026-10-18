@@ -14,7 +14,6 @@
   --color-danger-tile: #fcf0f0;
   --color-ok: #1f9d55;
   --color-ok-tile: #e9f7ef;
-  --color-pink: #ff3f8e;
   --color-lilac: #dde1f4;
 
   --radius-card: 28px;
@@ -58,7 +57,7 @@
     letter-spacing: inherit;
   }
   ::selection {
-    background: #ffd1e4;
+    background: #dde1f4;
   }
 }
 

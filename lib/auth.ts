@@ -17,7 +17,7 @@ const ADMIN_COOKIE = 'st_admin'
 function secret() {
   const s = process.env.SESSION_SECRET
   if (!s) {
-    if (process.env.VERCEL && !DEMO) throw new Error('SESSION_SECRET mangler')
+    if (process.env.VERCEL && !DEMO) throw new Error('SESSION_SECRET is missing')
     return new TextEncoder().encode('local-development-secret-not-for-production')
   }
   return new TextEncoder().encode(s)
@@ -36,7 +36,7 @@ export async function verifyPassword(pw: string, stored: string | null) {
   return timingSafeEqual(test, Buffer.from(hash, 'hex'))
 }
 
-/** Splits "E-mail eller telefon" into a normalized email or phone. */
+/** Splits "Email or phone" into a normalized email or phone. */
 export function parseIdentifier(raw: string): { email: string } | { phone: string } | null {
   const v = raw.trim()
   if (!v) return null
@@ -110,7 +110,7 @@ export const getCustomer = cache(async () => {
 
 export async function requireCustomer() {
   const c = await getCustomer()
-  if (!c) redirect('/log-ind')
+  if (!c) redirect('/login')
   return c
 }
 
@@ -146,5 +146,5 @@ export async function isAdmin() {
 }
 
 export async function requireAdmin() {
-  if (!(await isAdmin())) redirect('/admin/log-ind')
+  if (!(await isAdmin())) redirect('/admin/login')
 }

@@ -21,15 +21,15 @@ export function CancelDayForm({
   emailCount: number
   dayLabel: string
 }) {
-  const [reason, setReason] = useState<'sygdom' | 'egen'>('sygdom')
+  const [reason, setReason] = useState<'illness' | 'custom'>('illness')
   const option = 'flex min-h-12 cursor-pointer items-center justify-center rounded-full bg-tile px-4 text-[16px] has-[:checked]:bg-ink has-[:checked]:text-white'
 
   return (
     <details className="card group">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
         <span>
-          <span className="block text-[22px] text-danger">Aflys dagen</span>
-          <span className="block text-[15px] text-muted">Fx hvis du er syg. Alle tider aflyses, og dagen lukkes for booking.</span>
+          <span className="block text-[22px] text-danger">Cancel the day</span>
+          <span className="block text-[15px] text-muted">E.g. if you're ill. All appointments are cancelled and the day is closed for booking.</span>
         </span>
         <ChevronDown size={20} className="shrink-0 text-muted transition-transform group-open:rotate-180" />
       </summary>
@@ -37,42 +37,42 @@ export function CancelDayForm({
         <input type="hidden" name="date" value={date} />
         <input type="hidden" name="back" value={back} />
         <div>
-          <span className="label">Årsag</span>
+          <span className="label">Reason</span>
           <div className="grid grid-cols-2 gap-2">
             <label className={option}>
               <input
                 type="radio"
                 name="reason"
-                value="sygdom"
+                value="illness"
                 className="sr-only"
-                checked={reason === 'sygdom'}
-                onChange={() => setReason('sygdom')}
+                checked={reason === 'illness'}
+                onChange={() => setReason('illness')}
               />
-              Sygdom
+              Illness
             </label>
             <label className={option}>
               <input
                 type="radio"
                 name="reason"
-                value="egen"
+                value="custom"
                 className="sr-only"
-                checked={reason === 'egen'}
-                onChange={() => setReason('egen')}
+                checked={reason === 'custom'}
+                onChange={() => setReason('custom')}
               />
-              Anden årsag
+              Other reason
             </label>
           </div>
         </div>
-        {reason === 'egen' && (
+        {reason === 'custom' && (
           <label className="block">
-            <span className="label">Skriv årsagen til kunderne</span>
+            <span className="label">Write the reason for the customers</span>
             <textarea
               name="custom"
               className="input !min-h-24"
               maxLength={300}
               required
               autoFocus
-              placeholder="Fx: Salonen er desværre lukket pga. en vandskade."
+              placeholder="E.g.: Sorry, the salon is closed due to water damage."
             />
           </label>
         )}
@@ -80,13 +80,13 @@ export function CancelDayForm({
           <label className="flex items-start gap-3 px-1">
             <input type="checkbox" name="notify" defaultChecked className="mt-0.5 h-6 w-6 shrink-0 accent-ink" />
             <span>
-              Send mail til kunderne med årsagen og et forslag til en ny tid
+              Email the customers the reason and a suggested new time
               <span className="block text-[14px] text-muted">
                 {emailCount === count
-                  ? `${count} ${count === 1 ? 'kunde' : 'kunder'} får besked.`
+                  ? `${count} ${count === 1 ? 'customer' : 'customers'} will be notified.`
                   : emailCount === 0
-                    ? `${count === 1 ? 'Kunden har' : 'Kunderne har'} ingen e-mail, så du må selv give besked.`
-                    : `${emailCount} af ${count} kunder har en e-mail. Resten må du selv give besked.`}
+                    ? `${count === 1 ? 'The customer has' : 'The customers have'} no email, so you'll need to tell them yourself.`
+                    : `${emailCount} of ${count} customers ${emailCount === 1 ? 'has' : 'have'} an email. You'll need to tell the rest yourself.`}
               </span>
             </span>
           </label>
@@ -94,12 +94,12 @@ export function CancelDayForm({
         <ConfirmButton
           confirmText={
             count
-              ? `${count} ${count === 1 ? 'tid' : 'tider'} bliver aflyst, og ${dayLabel} lukkes for booking.`
-              : `${dayLabel} lukkes for booking.`
+              ? `${count} ${count === 1 ? 'appointment' : 'appointments'} will be cancelled, and ${dayLabel} will be closed for booking.`
+              : `${dayLabel} will be closed for booking.`
           }
-          confirmLabel="Aflys dagen"
+          confirmLabel="Cancel the day"
         >
-          Aflys dagen
+          Cancel the day
         </ConfirmButton>
       </ActionForm>
     </details>

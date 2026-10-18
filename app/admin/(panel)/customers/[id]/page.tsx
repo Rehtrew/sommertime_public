@@ -15,9 +15,9 @@ import { kr } from '@/lib/format'
 import { fmtDateShort, relativeDay } from '@/lib/time'
 import { deleteCustomer, saveNotes, setCustomerPassword, updateCustomer } from '@/app/actions/admin'
 
-export const metadata: Metadata = { title: 'Kunde' }
+export const metadata: Metadata = { title: 'Customer' }
 
-export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'>) {
+export default async function CustomerPage(props: PageProps<'/admin/customers/[id]'>) {
   const { id } = await props.params
   const c = await one<Customer>('SELECT * FROM customers WHERE id = $1', [Number(id)])
   if (!c) notFound()
@@ -34,7 +34,7 @@ export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'
   return (
     <div className="mx-auto max-w-3xl">
       <div className="px-2 pt-4">
-        <Link href="/admin/kunder" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-card" aria-label="Tilbage">
+        <Link href="/admin/customers" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-card" aria-label="Back">
           <ArrowLeft size={20} />
         </Link>
       </div>
@@ -44,7 +44,7 @@ export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'
         <div className="min-w-0">
           <h1 className="text-[40px] leading-none break-words md:text-[60px]">{c.name}</h1>
           <p className="mt-2 text-[15px] text-muted">
-            {c.password_hash ? 'Har profil' : 'Ingen profil endnu'} · kunde siden {fmtDateShort(new Date(c.created_at).toISOString().slice(0, 10))}
+            {c.password_hash ? 'Has a profile' : 'No profile yet'} · customer since {fmtDateShort(new Date(c.created_at).toISOString().slice(0, 10))}
           </p>
         </div>
       </div>
@@ -53,33 +53,33 @@ export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'
         <div className="mb-3 grid grid-cols-3 gap-2">
           {c.phone && (
             <a href={`tel:${c.phone}`} className="action-tile !bg-card">
-              <Phone size={22} strokeWidth={1.8} /> Ring
+              <Phone size={22} strokeWidth={1.8} /> Call
             </a>
           )}
           {c.phone && (
             <a href={`sms:${c.phone}`} className="action-tile !bg-card">
-              <MessageCircle size={22} strokeWidth={1.8} /> SMS
+              <MessageCircle size={22} strokeWidth={1.8} /> Text
             </a>
           )}
           {c.email && (
             <a href={`mailto:${c.email}`} className="action-tile !bg-card">
-              <Mail size={22} strokeWidth={1.8} /> Mail
+              <Mail size={22} strokeWidth={1.8} /> Email
             </a>
           )}
         </div>
       )}
 
       <div className="grid grid-cols-3 gap-2">
-        <Stat label="Besøg" value={String(past.length)} />
-        <Stat label="Sidste besøg" value={past[0] ? fmtDateShort(past[0].date) : '–'} small />
-        <Stat label="Forbrug ca." value={kr(spent)} small />
+        <Stat label="Visits" value={String(past.length)} />
+        <Stat label="Last visit" value={past[0] ? fmtDateShort(past[0].date) : '–'} small />
+        <Stat label="Approx. spent" value={kr(spent)} small />
       </div>
 
       <div className="mt-3 flex flex-col gap-3">
         <section className="card">
           <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-[26px]">Kommende</h2>
-            <Link href={`/admin/booking/ny?kunde=${c.id}`} className="btn btn-sm">
+            <h2 className="text-[26px]">Upcoming</h2>
+            <Link href={`/admin/booking/new?customer=${c.id}`} className="btn btn-sm">
               <Plus size={18} /> Book
             </Link>
           </div>
@@ -90,30 +90,30 @@ export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'
               ))}
             </div>
           ) : (
-            <p className="text-muted">Ingen kommende tider.</p>
+            <p className="text-muted">No upcoming appointments.</p>
           )}
         </section>
 
         <section className="card">
-          <h2 className="mb-1 text-[26px]">Noter</h2>
-          <p className="mb-4 text-[15px] text-muted">Kun synlige for dig.</p>
+          <h2 className="mb-1 text-[26px]">Notes</h2>
+          <p className="mb-4 text-[15px] text-muted">Only visible to you.</p>
           <ActionForm action={saveNotes} className="flex flex-col gap-3">
             <input type="hidden" name="id" value={c.id} />
             <textarea
               name="notes"
               className="input !min-h-36"
               defaultValue={c.notes}
-              placeholder="Fx farveopskrift, hårtype, allergier eller ønsker"
+              placeholder="E.g. colour formula, hair type, allergies or wishes"
             />
-            <SubmitButton className="btn btn-soft" pendingText="Gemmer…">
-              Gem noter
+            <SubmitButton className="btn btn-soft" pendingText="Saving…">
+              Save notes
             </SubmitButton>
           </ActionForm>
         </section>
 
         {(past.length > 0 || cancelled.length > 0) && (
           <section className="card">
-            <h2 className="mb-3 text-[26px]">Historik</h2>
+            <h2 className="mb-3 text-[26px]">History</h2>
             <ul>
               {[...past, ...cancelled]
                 .sort((a, b) => b.date.localeCompare(a.date) || b.start_min - a.start_min)
@@ -124,7 +124,7 @@ export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'
                         {b.service_name}
                       </span>
                       <span className="shrink-0 text-[15px] text-muted">
-                        {b.status === 'cancelled' ? 'Aflyst · ' : ''}
+                        {b.status === 'cancelled' ? 'Cancelled · ' : ''}
                         {fmtDateShort(b.date)}
                       </span>
                     </Link>
@@ -135,38 +135,38 @@ export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'
         )}
 
         <section className="card">
-          <h2 className="mb-4 text-[26px]">Oplysninger</h2>
+          <h2 className="mb-4 text-[26px]">Details</h2>
           <ActionForm action={updateCustomer} className="flex flex-col gap-4">
             <input type="hidden" name="id" value={c.id} />
-            <Field label="Navn">
+            <Field label="Name">
               <input className="input" name="name" defaultValue={c.name} required />
             </Field>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="E-mail">
+              <Field label="Email">
                 <input className="input" name="email" type="email" defaultValue={c.email ?? ''} />
               </Field>
-              <Field label="Telefon">
+              <Field label="Phone">
                 <input className="input" name="phone" type="tel" defaultValue={fmtPhone(c.phone)} />
               </Field>
             </div>
-            <SubmitButton className="btn btn-soft" pendingText="Gemmer…">
-              Gem oplysninger
+            <SubmitButton className="btn btn-soft" pendingText="Saving…">
+              Save details
             </SubmitButton>
           </ActionForm>
         </section>
 
         <section className="card">
-          <h2 className="mb-1 text-[26px]">Adgangskode</h2>
+          <h2 className="mb-1 text-[26px]">Password</h2>
           <p className="mb-4 text-[15px] text-muted">
             {c.password_hash
-              ? 'Har kunden glemt sin adgangskode, kan du sætte en ny her og give den videre.'
-              : 'Kunden har ikke oprettet en profil endnu. Du kan sætte en adgangskode for dem her.'}
+              ? 'If the customer has forgotten their password, you can set a new one here and pass it on.'
+              : "The customer hasn't created a profile yet. You can set a password for them here."}
           </p>
           <ActionForm action={setCustomerPassword} className="flex flex-col gap-3">
             <input type="hidden" name="id" value={c.id} />
-            <input className="input" name="password" type="text" minLength={6} placeholder="Ny adgangskode" autoComplete="off" required />
-            <SubmitButton className="btn btn-soft" pendingText="Gemmer…">
-              Sæt adgangskode
+            <input className="input" name="password" type="text" minLength={6} placeholder="New password" autoComplete="off" required />
+            <SubmitButton className="btn btn-soft" pendingText="Saving…">
+              Set password
             </SubmitButton>
           </ActionForm>
         </section>
@@ -174,10 +174,10 @@ export default async function CustomerPage(props: PageProps<'/admin/kunder/[id]'
         <form action={deleteCustomer} className="px-1">
           <input type="hidden" name="id" value={c.id} />
           <ConfirmButton
-            confirmText={`${c.name} og alle kommende tider slettes. Tidligere besøg bliver anonyme i statistikken.`}
-            confirmLabel="Slet kunde"
+            confirmText={`${c.name} and all upcoming appointments will be deleted. Past visits become anonymous in the statistics.`}
+            confirmLabel="Delete customer"
           >
-            Slet kunde
+            Delete customer
           </ConfirmButton>
         </form>
       </div>

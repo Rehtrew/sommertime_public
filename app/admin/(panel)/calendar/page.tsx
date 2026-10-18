@@ -24,33 +24,33 @@ import {
   today,
 } from '@/lib/time'
 
-export const metadata: Metadata = { title: 'Kalender' }
+export const metadata: Metadata = { title: 'Calendar' }
 
-const WEEKDAYS = ['man', 'tir', 'ons', 'tor', 'fre', 'lør', 'søn']
+const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-type View = 'uge' | 'maaned'
+type View = 'week' | 'month'
 
-export default async function CalendarPage(props: PageProps<'/admin/kalender'>) {
+export default async function CalendarPage(props: PageProps<'/admin/calendar'>) {
   const sp = await props.searchParams
   const t = today()
   const date = isDate(sp.date) ? sp.date : t
-  const view: View = sp.vis === 'uge' ? 'uge' : 'maaned'
-  const dayOpen = sp.dag === '1'
+  const view: View = sp.view === 'week' ? 'week' : 'month'
+  const dayOpen = sp.day === '1'
   const month = date.slice(0, 7)
 
   const href = (p: { date?: string; view?: View; day?: boolean } = {}) => {
     const q = new URLSearchParams()
-    if ((p.view ?? view) === 'uge') q.set('vis', 'uge')
+    if ((p.view ?? view) === 'week') q.set('view', 'week')
     q.set('date', p.date ?? date)
-    if (p.day) q.set('dag', '1')
-    return `/admin/kalender?${q}`
+    if (p.day) q.set('day', '1')
+    return `/admin/calendar?${q}`
   }
   const dayHref = (d: string) => href({ date: d, day: true })
   // Jumping to another month lands on today if it is in that month, otherwise on the 1st.
   const monthStart = (m: string) => (t.startsWith(m) ? t : `${m}-01`)
 
-  const from = view === 'uge' ? startOfWeek(date) : startOfWeek(`${month}-01`)
-  const to = view === 'uge' ? addDays(from, 6) : addDays(startOfWeek(addDays(`${shiftMonth(month, 1)}-01`, -1)), 6)
+  const from = view === 'week' ? startOfWeek(date) : startOfWeek(`${month}-01`)
+  const to = view === 'week' ? addDays(from, 6) : addDays(startOfWeek(addDays(`${shiftMonth(month, 1)}-01`, -1)), 6)
   const days = Array.from({ length: daysBetween(from, to) + 1 }, (_, i) => addDays(from, i))
   const [windows, bookings] = await Promise.all([windowsBetween(from, to), bookingsBetween(from, to)])
   const byDay = (d: string) => ({
@@ -58,8 +58,8 @@ export default async function CalendarPage(props: PageProps<'/admin/kalender'>) 
     books: bookings.filter((b) => b.date === d),
   })
 
-  const prev = view === 'uge' ? href({ date: addDays(date, -7) }) : href({ date: monthStart(shiftMonth(month, -1)) })
-  const next = view === 'uge' ? href({ date: addDays(date, 7) }) : href({ date: monthStart(shiftMonth(month, 1)) })
+  const prev = view === 'week' ? href({ date: addDays(date, -7) }) : href({ date: monthStart(shiftMonth(month, -1)) })
+  const next = view === 'week' ? href({ date: addDays(date, 7) }) : href({ date: monthStart(shiftMonth(month, 1)) })
 
   // Month dropdown: a few months back and a year ahead.
   const thisMonth = t.slice(0, 7)
@@ -74,12 +74,12 @@ export default async function CalendarPage(props: PageProps<'/admin/kalender'>) 
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4 px-2 pt-4 pb-6 md:pt-2">
-        <h1 className="text-[48px] leading-none md:text-[72px]">Kalender</h1>
-        <nav className="flex rounded-full bg-card p-1" aria-label="Visning">
+        <h1 className="text-[48px] leading-none md:text-[72px]">Calendar</h1>
+        <nav className="flex rounded-full bg-card p-1" aria-label="View">
           {(
             [
-              ['maaned', 'Måned'],
-              ['uge', 'Uge'],
+              ['month', 'Month'],
+              ['week', 'Week'],
             ] as const
           ).map(([v, label]) => (
             <Link
@@ -102,44 +102,44 @@ export default async function CalendarPage(props: PageProps<'/admin/kalender'>) 
         <div className="mb-5 flex items-start justify-between gap-2">
           <div className="min-w-0">
             <MonthPicker value={month} options={monthOptions} hrefs={monthHrefs} />
-            {view === 'uge' && (
+            {view === 'week' && (
               <p className="mt-0.5 text-[15px] text-muted">
-                Uge {isoWeek(from)} · {fmtWeekRange(from, to)}
+                Week {isoWeek(from)} · {fmtWeekRange(from, to)}
               </p>
             )}
           </div>
           <div className="flex shrink-0 items-center gap-1.5 md:gap-2">
-            {(view === 'uge' ? !days.includes(t) : !t.startsWith(month)) && (
+            {(view === 'week' ? !days.includes(t) : !t.startsWith(month)) && (
               <Link href={href({ date: t })} scroll={false} className="chip relative !min-h-11 max-sm:!hidden">
-                I dag
+                Today
                 <LinkPending />
               </Link>
             )}
-            <Link href={prev} scroll={false} className={roundBtn} aria-label={view === 'uge' ? 'Forrige uge' : 'Forrige måned'}>
+            <Link href={prev} scroll={false} className={roundBtn} aria-label={view === 'week' ? 'Previous week' : 'Previous month'}>
               <ChevronLeft size={20} />
               <LinkPending />
             </Link>
-            <Link href={next} scroll={false} className={roundBtn} aria-label={view === 'uge' ? 'Næste uge' : 'Næste måned'}>
+            <Link href={next} scroll={false} className={roundBtn} aria-label={view === 'week' ? 'Next week' : 'Next month'}>
               <ChevronRight size={20} />
               <LinkPending />
             </Link>
           </div>
         </div>
 
-        {view === 'uge' ? (
+        {view === 'week' ? (
           <WeekView days={days} today={t} byDay={byDay} dayHref={dayHref} />
         ) : (
           <MonthView days={days} month={month} today={t} selected={dayOpen ? date : null} byDay={byDay} dayHref={dayHref} />
         )}
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-2 text-[13px] text-muted">
-          <span>Tryk på en dag for at se den og åbne den for booking.</span>
+          <span>Tap a day to see it and open it for booking.</span>
           <span className="flex gap-4">
             <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-[4px] bg-[#eef0fa]" /> Åben for booking
+              <span className="h-3 w-3 rounded-[4px] bg-[#eef0fa]" /> Open for booking
             </span>
             <Link href={href({ date: t })} scroll={false} className="flex items-center gap-1.5 hover:text-ink">
-              <span className="h-3 w-3 rounded-[4px] ring-[1.5px] ring-ink ring-inset" /> I dag
+              <span className="h-3 w-3 rounded-[4px] ring-[1.5px] ring-ink ring-inset" /> Today
             </Link>
           </span>
         </div>
@@ -154,7 +154,7 @@ export default async function CalendarPage(props: PageProps<'/admin/kalender'>) 
             closeHref={href()}
             selfHref={dayHref(date)}
             cancelNotice={
-              typeof sp.aflyst === 'string' ? { cancelled: Number(sp.aflyst) || 0, mailed: Number(sp.mailet) || 0 } : undefined
+              typeof sp.cancelled === 'string' ? { cancelled: Number(sp.cancelled) || 0, mailed: Number(sp.mailed) || 0 } : undefined
             }
           />
         </Drawer>
@@ -217,7 +217,7 @@ function WeekView({
                     scroll={false}
                     className="relative flex items-center justify-center gap-1 rounded-full border-[1.5px] border-dashed border-[#d0d0d0] px-2 py-0.5 text-[13px] text-muted hover:border-ink hover:text-ink"
                   >
-                    <Plus size={14} /> Åbn
+                    <Plus size={14} /> Open
                     <LinkPending />
                   </Link>
                 )
@@ -230,7 +230,7 @@ function WeekView({
                   style={{ borderLeftColor: categoryColor(b.category) }}
                 >
                   <span className="block text-[12px] leading-tight text-muted">{fmtTime(b.start_min)}</span>
-                  <span className="block truncate text-[14px] leading-snug">{b.customer_name ?? 'Slettet kunde'}</span>
+                  <span className="block truncate text-[14px] leading-snug">{b.customer_name ?? 'Deleted customer'}</span>
                   <span className="block truncate text-[12px] leading-tight text-muted">{b.service_name}</span>
                   <LinkPending />
                 </Link>
@@ -264,14 +264,14 @@ function WeekView({
                 </span>
                 <span className="min-w-0 flex-1 pt-0.5">
                   <span className={`block text-[15px] ${wins.length ? '' : 'text-muted'}`}>
-                    {wins.length ? `Åben ${hours(wins)}` : past ? 'Lukket' : 'Lukket · tryk for at åbne'}
+                    {wins.length ? `Open ${hours(wins)}` : past ? 'Closed' : 'Closed · tap to open'}
                   </span>
                   {books.map((b) => (
                     <span key={b.id} className="mt-1 flex items-center gap-2 text-[15px]">
                       <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: categoryColor(b.category) }} />
                       <span className="shrink-0 text-muted">{fmtTime(b.start_min)}</span>
                       <span className="truncate">
-                        {b.customer_name ?? 'Slettet kunde'} <span className="text-muted">· {b.service_name}</span>
+                        {b.customer_name ?? 'Deleted customer'} <span className="text-muted">· {b.service_name}</span>
                       </span>
                     </span>
                   ))}
@@ -325,7 +325,7 @@ function MonthView({
             <span className="text-[17px] leading-tight">{dayNumber(d)}</span>
             {books.length > 0 && (
               <span className="mt-1 flex items-center gap-1.5 text-[12px] leading-none">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-pink" />
+                <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${isSelected ? 'bg-white' : 'bg-ink'}`} />
                 <span className="hidden lg:inline">{books.length}</span>
               </span>
             )}

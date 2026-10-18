@@ -20,24 +20,24 @@ export default async function EditBookingPage(props: PageProps<'/admin/booking/[
     <div className="mx-auto max-w-xl">
       <div className="px-2 pt-4">
         <Link
-          href={`/admin/kalender?date=${b.date}&dag=1`}
+          href={`/admin/calendar?date=${b.date}&day=1`}
           className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-card"
-          aria-label="Tilbage"
+          aria-label="Back"
         >
           <ArrowLeft size={20} />
         </Link>
       </div>
       <div className="px-2 pt-5 pb-6">
         <p className="text-[20px] text-muted">
-          {cap(fmtDate(b.date))} kl. {fmtTime(b.start_min)}
+          {cap(fmtDate(b.date))} at {fmtTime(b.start_min)}
         </p>
         <h1 className="text-[44px] leading-none md:text-[60px]">
           {b.customer_id ? (
-            <Link href={`/admin/kunder/${b.customer_id}`} className="hover:underline">
+            <Link href={`/admin/customers/${b.customer_id}`} className="hover:underline">
               {b.customer_name}
             </Link>
           ) : (
-            'Slettet kunde'
+            'Deleted customer'
           )}
         </h1>
       </div>
@@ -45,9 +45,9 @@ export default async function EditBookingPage(props: PageProps<'/admin/booking/[
       {b.status === 'cancelled' && (
         <p className="mb-3 rounded-[24px] bg-danger-tile p-5 text-danger">
           {b.cancelled_by === 'salon'
-            ? `Du har aflyst denne tid${b.cancel_reason ? ` (${b.cancel_reason})` : ''}.`
-            : 'Kunden har aflyst denne tid.'}{' '}
-          Gem for at genaktivere den.
+            ? `You cancelled this appointment${b.cancel_reason ? ` (${b.cancel_reason})` : ''}.`
+            : 'The customer cancelled this appointment.'}{' '}
+          Save to reactivate it.
         </p>
       )}
 
@@ -57,8 +57,8 @@ export default async function EditBookingPage(props: PageProps<'/admin/booking/[
 
       <section className="card mt-3 flex flex-col gap-3">
         {b.status === 'booked' && (
-          <a href={`/api/kalender/${b.id}`} className="btn btn-soft">
-            <CalendarPlus size={18} /> Føj til min kalender
+          <a href={`/api/calendar/${b.id}`} className="btn btn-soft">
+            <CalendarPlus size={18} /> Add to my calendar
           </a>
         )}
         <form action={deleteBooking} className="flex flex-col gap-3">
@@ -67,13 +67,13 @@ export default async function EditBookingPage(props: PageProps<'/admin/booking/[
             <label className="flex items-start gap-3 px-1">
               <input type="checkbox" name="notify" defaultChecked className="mt-0.5 h-6 w-6 shrink-0 accent-ink" />
               <span>
-                Giv kunden besked på mail, hvis jeg sletter tiden
-                <span className="block text-[14px] text-muted">Kun hvis kunden har en e-mail.</span>
+                Email the customer if I delete the appointment
+                <span className="block text-[14px] text-muted">Only if the customer has an email.</span>
               </span>
             </label>
           )}
-          <ConfirmButton confirmText="Bookingen slettes helt." confirmLabel="Slet">
-            Slet booking
+          <ConfirmButton confirmText="The booking will be deleted completely." confirmLabel="Delete">
+            Delete booking
           </ConfirmButton>
         </form>
       </section>

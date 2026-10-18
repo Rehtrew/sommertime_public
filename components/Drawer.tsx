@@ -28,7 +28,7 @@ export function Drawer({ closeHref, label, children }: { closeHref: string; labe
 
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={label}>
-      <Link href={closeHref} scroll={false} aria-label="Luk" className="drawer-backdrop absolute inset-0 bg-black/25" />
+      <Link href={closeHref} scroll={false} aria-label="Close" className="drawer-backdrop absolute inset-0 bg-black/25" />
       <div
         ref={panel}
         tabIndex={-1}

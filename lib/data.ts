@@ -47,7 +47,7 @@ export type Booking = {
 }
 
 /**
- * Categories in the order the hairdresser arranged them under Admin → Ydelser.
+ * Categories in the order the hairdresser arranged them under Admin → Services.
  * Expects services sorted by sort_order, as getServices returns them.
  */
 export function categoriesInOrder(services: Pick<Service, 'category'>[]) {
@@ -148,5 +148,5 @@ export async function findOverlap(date: string, start: number, end: number, igno
 }
 
 export function overlapMessage(b: Booking) {
-  return `Overlapper med ${b.service_name}${b.customer_name ? ` (${b.customer_name})` : ''} kl. ${fmtTime(b.start_min)}–${fmtTime(b.end_min)}.`
+  return `Overlaps with ${b.service_name}${b.customer_name ? ` (${b.customer_name})` : ''} at ${fmtTime(b.start_min)}–${fmtTime(b.end_min)}.`
 }

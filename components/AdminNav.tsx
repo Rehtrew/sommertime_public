@@ -5,16 +5,16 @@ import { usePathname } from 'next/navigation'
 import { CalendarDays, ChartColumn, House, Scissors, Users } from 'lucide-react'
 
 const ITEMS = [
-  { href: '/admin', label: 'Oversigt', icon: House },
-  { href: '/admin/kalender', label: 'Kalender', icon: CalendarDays },
-  { href: '/admin/kunder', label: 'Kunder', icon: Users },
-  { href: '/admin/ydelser', label: 'Ydelser', icon: Scissors },
-  { href: '/admin/statistik', label: 'Statistik', icon: ChartColumn },
+  { href: '/admin', label: 'Overview', icon: House },
+  { href: '/admin/calendar', label: 'Calendar', icon: CalendarDays },
+  { href: '/admin/customers', label: 'Customers', icon: Users },
+  { href: '/admin/services', label: 'Services', icon: Scissors },
+  { href: '/admin/stats', label: 'Statistics', icon: ChartColumn },
 ]
 
 function active(path: string, href: string) {
   if (href === '/admin') return path === '/admin'
-  if (href === '/admin/kalender') return path.startsWith('/admin/kalender') || path.startsWith('/admin/booking')
+  if (href === '/admin/calendar') return path.startsWith('/admin/calendar') || path.startsWith('/admin/booking')
   return path.startsWith(href)
 }
 

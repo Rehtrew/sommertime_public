@@ -6,7 +6,6 @@ import { Field } from '@/components/Field'
 import { SubmitButton } from '@/components/SubmitButton'
 import { isAdmin } from '@/lib/auth'
 import { adminLogin } from '@/app/actions/admin'
-import { DemoButtons } from '@/components/DemoButtons'
 
 export const metadata: Metadata = { title: 'Admin', robots: { index: false } }
 
@@ -15,19 +14,16 @@ export default async function AdminLoginPage() {
   return (
     <AuthShell compact>
       <h1 className="text-[52px] leading-[0.98] md:text-[80px]">Admin</h1>
-      <p className="mt-3 text-[19px] text-muted">Kun for frisøren.</p>
+      <p className="mt-3 text-[19px] text-muted">For the hairdresser only.</p>
       <ActionForm action={adminLogin} className="mt-8 flex max-w-md flex-col gap-4">
         <input type="text" name="username" value="admin" autoComplete="username" readOnly hidden />
-        <Field label="Adgangskode">
+        <Field label="Password">
           <input className="input" name="password" type="password" autoComplete="current-password" required autoFocus />
         </Field>
-        <SubmitButton className="btn mt-2" pendingText="Logger ind…">
-          Log ind
+        <SubmitButton className="btn mt-2" pendingText="Logging in…">
+          Log in
         </SubmitButton>
       </ActionForm>
-      <div className="mt-4 max-w-md">
-        <DemoButtons only="frisør" />
-      </div>
     </AuthShell>
   )
 }
