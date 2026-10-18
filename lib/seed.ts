@@ -1,0 +1,141 @@
+// Starting point for the service list. Everything can be edited under Admin → Ydelser.
+export const SEED_SERVICES: {
+  category: string
+  name: string
+  description: string
+  duration: number
+  from: number
+  to?: number
+}[] = [
+  {
+    category: 'Dame',
+    name: 'Dameklip',
+    description: 'Vask med en lækker hovedbundsmassage og en klipning, der passer til dig, dit hår og din hverdag. Afsluttes med styling.',
+    duration: 60,
+    from: 739,
+    to: 895,
+  },
+  {
+    category: 'Dame',
+    name: 'Pandehår',
+    description: 'Få dit pandehår klippet til perfektion. Tilpas din frisure med et præcist og stilfuldt pandehår.',
+    duration: 15,
+    from: 199,
+  },
+  {
+    category: 'Herre',
+    name: 'Herreklip',
+    description: 'Vask med en lækker hovedbundsmassage og en knivskarp klipning, der passer til dig og din stil.',
+    duration: 30,
+    from: 599,
+    to: 745,
+  },
+  {
+    category: 'Herre',
+    name: 'Klipning af sider og kanter',
+    description: 'Til dig der elsker skarpe kanter og sider. Kan bookes op til 4 uger efter dit herreklip. Der indgår ikke vask.',
+    duration: 15,
+    from: 479,
+    to: 545,
+  },
+  {
+    category: 'Herre',
+    name: 'Buzzcut uden vask',
+    description: 'Til dig der ønsker et maskineklip. Der indgår ikke vask.',
+    duration: 30,
+    from: 479,
+  },
+  {
+    category: 'Farve',
+    name: 'Balayage',
+    description: 'Et naturligt look med bløde overgange og minimal udgroning.',
+    duration: 120,
+    from: 2459,
+    to: 2559,
+  },
+  {
+    category: 'Farve',
+    name: 'Reparation af balayage',
+    description: 'Giver nyt liv til din farve og genopfrisker de bløde overgange.',
+    duration: 75,
+    from: 1759,
+    to: 1859,
+  },
+  {
+    category: 'Farve',
+    name: 'Reflekser i hele håret',
+    description: 'Giver et naturligt spil i håret og skaber en smuk sammenhæng fra rod til spids.',
+    duration: 120,
+    from: 2079,
+    to: 2179,
+  },
+  {
+    category: 'Farve',
+    name: 'Reflekser i hele håret inkl. toning',
+    description: 'Et naturligt spil i håret med en smuk sammenhæng, afsluttet med toning for ekstra glans.',
+    duration: 150,
+    from: 2528,
+    to: 2628,
+  },
+  {
+    category: 'Farve',
+    name: 'Reparation af reflekser, top og sider',
+    description: 'Frisker farven op på top og sider og genskaber et lyst og naturligt spil.',
+    duration: 90,
+    from: 1579,
+    to: 1679,
+  },
+  {
+    category: 'Farve',
+    name: 'Reparation af reflekser inkl. toning, top og sider',
+    description: 'Frisker farven op på top og sider og genskaber et lyst og naturligt spil, afsluttet med toning.',
+    duration: 120,
+    from: 2028,
+    to: 2128,
+  },
+  {
+    category: 'Farve',
+    name: 'Helfarve, toning eller glossing – kort hår',
+    description: 'Et ensartet og stilfuldt udtryk i hele håret med et naturligt og tidløst resultat.',
+    duration: 60,
+    from: 999,
+    to: 1099,
+  },
+  {
+    category: 'Farve',
+    name: 'Helfarve, toning eller glossing – mellemlangt hår',
+    description: 'Et ensartet og stilfuldt udtryk i hele håret med et naturligt og tidløst resultat.',
+    duration: 75,
+    from: 1189,
+    to: 1289,
+  },
+  {
+    category: 'Farve',
+    name: 'Helfarve, toning eller glossing – langt hår',
+    description: 'Et ensartet og stilfuldt udtryk i hele håret med et naturligt og tidløst resultat.',
+    duration: 75,
+    from: 1289,
+    to: 1389,
+  },
+  {
+    category: 'Farve',
+    name: 'Bundfarve',
+    description: 'En ensartet og frisk farve i bunden, der dækker udgroninger, så håret ser velplejet ud.',
+    duration: 60,
+    from: 899,
+  },
+  {
+    category: 'Farve',
+    name: 'Bundfarve inkl. toning',
+    description: 'Dækker udgroninger og giver et mere glansfuldt, ensartet og naturligt resultat.',
+    duration: 75,
+    from: 1348,
+  },
+  {
+    category: 'Farve',
+    name: 'Bundfarve med afblegning',
+    description: 'Lysner bunden og giver et ensartet, lyst udtryk med et harmonisk resultat.',
+    duration: 90,
+    from: 1525,
+  },
+]
