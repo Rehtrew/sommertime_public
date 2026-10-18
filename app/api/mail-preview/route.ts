@@ -1,6 +1,8 @@
 import { adminMail, customerMail, dayCancelledMail, reminderMail, SICK_REASON, welcomeMail } from '@/lib/mail'
 import { addDays, today } from '@/lib/time'
-import { DEMO } from '@/lib/demo'
+import { DEMO, DEMO_CUSTOMER_EMAIL } from '@/lib/demo'
+import { one } from '@/lib/db'
+import { freeSlots, type Booking } from '@/lib/data'
 
 /**
  * Shows the emails in the browser, in development and in demo mode.
@@ -10,7 +12,15 @@ import { DEMO } from '@/lib/demo'
 export async function GET(req: Request) {
   if (process.env.NODE_ENV === 'production' && !DEMO) return new Response('Not found', { status: 404 })
   const type = new URL(req.url).searchParams.get('type') ?? 'reminder'
-  const b = {
+  // In the demo, show the demo customer's real next appointment and a real free time.
+  const real = DEMO
+    ? await one<Booking>(
+        `SELECT b.* FROM bookings b JOIN customers c ON c.id = b.customer_id
+         WHERE c.email = $1 AND b.status = 'booked' AND b.date >= $2 ORDER BY b.date, b.start_min LIMIT 1`,
+        [DEMO_CUSTOMER_EMAIL, today()],
+      )
+    : undefined
+  const sample = {
     id: 1,
     date: addDays(today(), 1),
     start_min: 660,
@@ -20,6 +30,10 @@ export async function GET(req: Request) {
     price_to: 895,
     note: 'A bit shorter than last time, please, and the fringe too.',
   }
+  const b = real ? { ...real, note: real.note || sample.note } : sample
+  // The cancelled day is closed, so the suggestion is on another day.
+  const free = DEMO ? [...(await freeSlots(60)).entries()].find(([d]) => d !== b.date) : undefined
+  const suggestion = free ? { date: free[0], start_min: free[1][0] } : { date: addDays(today(), 8), start_min: 600 }
   const mail =
     type === 'new' || type === 'moved' || type === 'cancelled'
       ? adminMail(type, 'Ida Holm', b)
@@ -30,7 +44,7 @@ export async function GET(req: Request) {
               'Ida Holm',
               { ...b, service_id: 1 },
               type === 'day-cancelled' ? SICK_REASON : 'The salon is closed because of a water leak.',
-              { date: addDays(today(), 8), start_min: 600 },
+              suggestion,
             )
           : type === 'welcome'
             ? welcomeMail('Ida Holm', 'ida@example.com')

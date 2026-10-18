@@ -1,0 +1,92 @@
+{
+  "title": "Sommertime",
+  "tagline": "A simple booking system for a one-person hair salon",
+  "description": "Sommertime is a small booking app for a hairdresser who works a few days a month and has a handful of regular customers. Customers create a profile with their email, pick a treatment, a day and a time, and can move or cancel the appointment themselves. There are no payments.\n\nThe hairdresser has an admin area for opening days for booking, seeing bookings in a month or week calendar, booking on behalf of customers, keeping notes on each customer and editing the list of treatments and prices. If the hairdresser falls ill, a whole day can be cancelled; every customer that day gets an email with a suggested new time and a link that goes straight to booking it.\n\nCustomers get a welcome email, a confirmation with a calendar file attached and a reminder the day before. Everything is built for phones first and runs on free tiers.\n\nThis public version runs as a demo when no database is set up: it fills an in-memory database with made-up customers and bookings, and a bar at the top lets you switch between the customer and the hairdresser view.",
+  "type": "Web app",
+  "category": "Small business",
+  "tags": [
+    "booking",
+    "calendar",
+    "hair-salon",
+    "nextjs",
+    "small-business"
+  ],
+  "links": {
+    "repo": "https://github.com/Rehtrew/sommertime_public",
+    "live": "https://sommertime-public.vercel.app/"
+  },
+  "agents": [
+    {
+      "name": "Claude Code (Claude Opus 5.5)",
+      "role": "Planned and wrote all the code, the design, the emails and the demo mode, tested it in a browser at phone and desktop sizes, and handled git and deploy fixes. The person behind it gave the requirements, design references and feedback, and set up Vercel, Neon and the Gmail account.",
+      "share": 95
+    }
+  ],
+  "stack": [
+    "Next.js 16 (App Router, Server Actions)",
+    "React 19",
+    "Tailwind CSS 4",
+    "PostgreSQL on Neon",
+    "PGlite (in-memory database for the demo)",
+    "Vercel (hosting and Cron)",
+    "Nodemailer over SMTP"
+  ],
+  "mcp": [
+    {
+      "name": "Claude Browser (built-in browser in the Claude desktop app)",
+      "use": "Clicking through the app at phone and desktop sizes, checking layouts with screenshots and reading the dev server logs while building"
+    }
+  ],
+  "build": {
+    "time": "About 4 days, 14 to 18 October 2026",
+    "cost": null,
+    "prompts": 42
+  },
+  "requirements": [
+    {
+      "name": "Node.js",
+      "version": ">= 20.9 (required by Next.js 16)",
+      "kind": "tool"
+    },
+    {
+      "name": "npm",
+      "version": "comes with Node.js",
+      "kind": "tool"
+    },
+    {
+      "name": "macOS, Windows or Linux",
+      "version": "any OS that runs Node.js, for running it locally",
+      "kind": "platform"
+    },
+    {
+      "name": "A modern web browser",
+      "version": "on a phone or a computer",
+      "kind": "platform"
+    },
+    {
+      "name": "Vercel account",
+      "version": "free Hobby plan; only needed to host it",
+      "kind": "account"
+    },
+    {
+      "name": "Neon Postgres database",
+      "version": "free plan; optional, sets DATABASE_URL. Without it the app runs as a demo",
+      "kind": "account"
+    },
+    {
+      "name": "Email account with SMTP access",
+      "version": "optional, e.g. Gmail with an app password (SMTP_HOST, SMTP_USER, SMTP_PASS)",
+      "kind": "account"
+    },
+    {
+      "name": "Admin password",
+      "version": "you choose it and set ADMIN_PASSWORD, plus a random SESSION_SECRET",
+      "kind": "access"
+    },
+    {
+      "name": "Customer profile",
+      "version": "customers sign up with their own email; nothing needed in demo mode",
+      "kind": "access"
+    }
+  ]
+}

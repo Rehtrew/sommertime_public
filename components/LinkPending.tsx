@@ -8,8 +8,9 @@ export function LinkPending() {
   return (
     <span
       aria-hidden
-      className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-white/50 transition-opacity duration-150 motion-safe:animate-pulse ${
-        pending ? 'opacity-100 delay-75' : 'opacity-0'
+      className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-white/50 transition-opacity duration-150 ${
+        // Only pulse while loading: the pulse animation would otherwise override opacity-0 and grey out the link.
+        pending ? 'opacity-100 delay-75 motion-safe:animate-pulse' : 'opacity-0'
       }`}
     />
   )

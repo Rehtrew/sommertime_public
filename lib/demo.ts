@@ -53,13 +53,13 @@ export async function seedDemo(query: Query) {
     )
   }
 
-  // Opening hours: Tuesday to Saturday, three months back and four weeks ahead.
+  // Opening hours: two days a week (Wednesday and Saturday), three months back and four weeks ahead.
   const openDays: string[] = []
   for (let d = addDays(t, -90); d <= addDays(t, 28); d = addDays(d, 1)) {
     const wd = weekday(d)
-    if (wd < 1 || wd > 5) continue
+    if (wd !== 2 && wd !== 5) continue
     openDays.push(d)
-    await query('INSERT INTO availability (date, start_min, end_min) VALUES ($1, $2, $3)', [d, 600, wd === 5 ? 840 : 1020])
+    await query('INSERT INTO availability (date, start_min, end_min) VALUES ($1, $2, $3)', [d, 600, wd === 5 ? 900 : 1020])
   }
 
   const taken = new Map<string, [number, number][]>()
@@ -96,9 +96,9 @@ export async function seedDemo(query: Query) {
 
   // Everyone else fills the days: busy in the past, with free spots ahead.
   for (const d of openDays) {
-    const end = weekday(d) === 5 ? 840 : 1020
+    const end = weekday(d) === 5 ? 900 : 1020
     const ahead = d >= t
-    const load = !ahead ? 0.62 : d <= addDays(t, 7) ? 0.42 : 0.25
+    const load = !ahead ? 0.5 : d <= addDays(t, 7) ? 0.4 : 0.25
     let pointer = 600
     while (pointer < end) {
       if (random() > load) {
