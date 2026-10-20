@@ -18,14 +18,14 @@ export default async function ServicesPage() {
   return (
     <>
       <div className="px-2 pt-4 pb-6 md:pt-2">
-        <h1 className="text-[48px] leading-none md:text-[72px]">Services</h1>
+        <h1 className="text-display">Services</h1>
         <p className="mt-3 text-muted">
           What customers can choose from when they book. The top category is shown first.
         </p>
       </div>
 
       <details className="card group mb-3">
-        <summary className="flex cursor-pointer list-none items-center justify-between text-[20px] [&::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between text-body [&::-webkit-details-marker]:hidden">
           New service
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-tile transition-transform group-open:rotate-45">
             <Plus size={20} />
@@ -51,7 +51,7 @@ export default async function ServicesPage() {
           return (
             <section key={cat} className="card !p-2 md:!p-3">
               <div className="flex items-center justify-between gap-3 px-3 pt-3 pb-2">
-                <h2 className="flex items-center gap-3 text-[26px]">
+                <h2 className="flex items-center gap-3 text-title">
                   <span className="h-3 w-3 rounded-full" style={{ background: categoryColor(cat) }} />
                   {cat}
                 </h2>
@@ -77,11 +77,11 @@ export default async function ServicesPage() {
                     <details className="group/item rounded-[20px] open:bg-tile">
                       <summary className="flex cursor-pointer list-none items-center gap-4 rounded-[20px] p-3 hover:bg-tile [&::-webkit-details-marker]:hidden">
                         <span className="min-w-0 flex-1">
-                          <span className={`block text-[18px] leading-snug ${s.active ? '' : 'text-muted'}`}>
+                          <span className={`block text-body leading-snug ${s.active ? '' : 'text-muted'}`}>
                             {s.name}
-                            {!s.active && <span className="ml-2 rounded-full bg-tile-strong px-2 py-0.5 text-[13px]">hidden</span>}
+                            {!s.active && <span className="ml-2 rounded-full bg-tile-strong px-2 py-0.5 text-small">hidden</span>}
                           </span>
-                          <span className="block text-[15px] text-muted">
+                          <span className="block text-small text-muted">
                             {fmtDuration(s.duration_min)} · {priceRange(s.price_from, s.price_to)}
                           </span>
                         </span>

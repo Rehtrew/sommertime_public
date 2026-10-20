@@ -13,8 +13,8 @@ export default async function AdminLoginPage() {
   if (await isAdmin()) redirect('/admin')
   return (
     <AuthShell compact>
-      <h1 className="text-[52px] leading-[0.98] md:text-[80px]">Admin</h1>
-      <p className="mt-3 text-[19px] text-muted">For the hairdresser only.</p>
+      <h1 className="text-display">Admin</h1>
+      <p className="mt-3 text-body text-muted">For the hairdresser only.</p>
       <ActionForm action={adminLogin} className="mt-8 flex max-w-md flex-col gap-4">
         <input type="text" name="username" value="admin" autoComplete="username" readOnly hidden />
         <Field label="Password">

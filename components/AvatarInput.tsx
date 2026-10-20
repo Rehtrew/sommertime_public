@@ -66,7 +66,7 @@ export function AvatarInput({ name, initial }: { name: string; initial: string |
         {src && (
           <button
             type="button"
-            className="px-2 py-1 text-[15px] text-muted"
+            className="px-2 py-1 text-small text-muted"
             onClick={() => {
               setSrc(null)
               setValue('remove')

@@ -27,7 +27,7 @@ export function AdminNav({ variant }: { variant: 'sidebar' | 'tabs' }) {
           <Link
             key={href}
             href={href}
-            className={`flex items-center gap-3 rounded-[18px] px-4 py-3 text-[18px] transition-colors ${
+            className={`flex items-center gap-3 rounded-[18px] px-4 py-3 text-body transition-colors ${
               active(path, href) ? 'bg-ink text-white' : 'text-ink hover:bg-card'
             }`}
           >
@@ -44,7 +44,7 @@ export function AdminNav({ variant }: { variant: 'sidebar' | 'tabs' }) {
         <Link
           key={href}
           href={href}
-          className={`flex flex-col items-center gap-1 rounded-[20px] py-2 text-[12px] transition-colors ${
+          className={`flex flex-col items-center gap-1 rounded-[20px] py-2 text-caption transition-colors ${
             active(path, href) ? 'bg-white/15 text-white' : 'text-white/55'
           }`}
         >

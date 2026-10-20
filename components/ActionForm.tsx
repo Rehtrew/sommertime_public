@@ -30,12 +30,12 @@ export function ActionForm({
     >
       <FormPendingContext value={pending}>{children}</FormPendingContext>
       {state?.error && (
-        <p role="alert" className="fade-in rounded-[18px] bg-danger-tile px-4 py-3 text-[16px] text-danger">
+        <p role="alert" className="fade-in rounded-[18px] bg-danger-tile px-4 py-3 text-small text-danger">
           {state.error}
         </p>
       )}
       {state?.ok && (
-        <p role="status" className="fade-in rounded-[18px] bg-ok-tile px-4 py-3 text-[16px] text-ok">
+        <p role="status" className="fade-in rounded-[18px] bg-ok-tile px-4 py-3 text-small text-ok">
           {state.ok}
         </p>
       )}

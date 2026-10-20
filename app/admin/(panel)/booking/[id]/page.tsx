@@ -28,10 +28,10 @@ export default async function EditBookingPage(props: PageProps<'/admin/booking/[
         </Link>
       </div>
       <div className="px-2 pt-5 pb-6">
-        <p className="text-[20px] text-muted">
+        <p className="text-body text-muted">
           {cap(fmtDate(b.date))} at {fmtTime(b.start_min)}
         </p>
-        <h1 className="text-[44px] leading-none md:text-[60px]">
+        <h1 className="text-display">
           {b.customer_id ? (
             <Link href={`/admin/customers/${b.customer_id}`} className="hover:underline">
               {b.customer_name}
@@ -68,7 +68,7 @@ export default async function EditBookingPage(props: PageProps<'/admin/booking/[
               <input type="checkbox" name="notify" defaultChecked className="mt-0.5 h-6 w-6 shrink-0 accent-ink" />
               <span>
                 Email the customer if I delete the appointment
-                <span className="block text-[14px] text-muted">Only if the customer has an email.</span>
+                <span className="block text-small text-muted">Only if the customer has an email.</span>
               </span>
             </label>
           )}

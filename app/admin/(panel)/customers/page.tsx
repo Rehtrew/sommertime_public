@@ -41,12 +41,12 @@ export default async function CustomersPage(props: PageProps<'/admin/customers'>
   return (
     <>
       <div className="flex items-end justify-between gap-4 px-2 pt-4 pb-6 md:pt-2">
-        <h1 className="text-[48px] leading-none md:text-[72px]">Customers</h1>
-        <span className="pb-1 text-[20px] text-muted">{rows.length}</span>
+        <h1 className="text-display">Customers</h1>
+        <span className="pb-1 text-body text-muted">{rows.length}</span>
       </div>
 
       <details className="card group mb-3" open={sp.new === '1'}>
-        <summary className="flex cursor-pointer list-none items-center justify-between text-[20px] [&::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between text-body [&::-webkit-details-marker]:hidden">
           Add customer
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-tile transition-transform group-open:rotate-45">
             <Plus size={20} />
@@ -67,7 +67,7 @@ export default async function CustomersPage(props: PageProps<'/admin/customers'>
           <Field label="Notes" hint="Only visible to you. E.g. colour formula or wishes.">
             <textarea className="input" name="notes" />
           </Field>
-          <p className="ml-1 text-[14px] text-muted">
+          <p className="ml-1 text-small text-muted">
             The customer can later create a profile with the same email and take over their history.
           </p>
           <SubmitButton className="btn" pendingText="Adding…">
@@ -97,12 +97,12 @@ export default async function CustomersPage(props: PageProps<'/admin/customers'>
                 <Link href={`/admin/customers/${c.id}`} className="flex items-center gap-4 rounded-[20px] p-3 hover:bg-tile">
                   <Avatar name={c.name} src={c.avatar} size={52} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[19px] leading-snug">{c.name}</span>
-                    <span className="block truncate text-[15px] text-muted">
+                    <span className="block truncate text-body leading-snug">{c.name}</span>
+                    <span className="block truncate text-small text-muted">
                       {[c.phone && fmtPhone(c.phone), c.email].filter(Boolean).join(' · ') || 'No contact info'}
                     </span>
                   </span>
-                  <span className="hidden shrink-0 text-right text-[15px] text-muted sm:block">
+                  <span className="hidden shrink-0 text-right text-small text-muted sm:block">
                     {c.visits} {c.visits === 1 ? 'visit' : 'visits'}
                     {c.next_date && <span className="block text-ink">Next {fmtDateShort(c.next_date)}</span>}
                   </span>

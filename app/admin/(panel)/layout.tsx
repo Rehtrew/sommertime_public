@@ -13,19 +13,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="mx-auto min-h-svh max-w-[1200px] md:grid md:grid-cols-[220px_1fr] md:gap-8 md:px-6">
       <aside className="hidden md:sticky md:top-0 md:flex md:h-svh md:flex-col md:py-8">
-        <Link href="/admin" className="mb-8 px-4 text-[24px]">
+        <Link href="/admin" className="mb-8 px-4 text-title">
           {SALON.name}
         </Link>
         <AdminNav variant="sidebar" />
         <form action={adminLogout} className="mt-auto">
-          <button className="flex items-center gap-3 px-4 py-3 text-[16px] text-muted hover:text-ink">
+          <button className="flex items-center gap-3 px-4 py-3 text-small text-muted hover:text-ink">
             <LogOut size={18} /> Log out
           </button>
         </form>
       </aside>
       <div className="px-3 pt-4 pb-32 md:px-0 md:pt-8 md:pb-16">
         <header className="mb-2 flex items-center justify-between px-2 md:hidden">
-          <Link href="/admin" className="text-[22px]">
+          <Link href="/admin" className="text-title">
             {SALON.name}
           </Link>
           <form action={adminLogout}>

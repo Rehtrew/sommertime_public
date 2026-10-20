@@ -17,7 +17,7 @@ export function MonthPicker({
   const current = options.find((o) => o.value === value)
   return (
     <label className="relative inline-flex items-center gap-1.5 rounded-full py-1 pr-1 hover:opacity-70">
-      <span className="text-[22px] whitespace-nowrap md:text-[28px]">{current?.label}</span>
+      <span className="text-title whitespace-nowrap">{current?.label}</span>
       <ChevronDown size={20} className="mt-1 shrink-0" />
       <select
         aria-label="Choose month"

@@ -14,8 +14,8 @@ export default async function Landing(props: PageProps<'/'>) {
           Your profile has been deleted. Thanks for stopping by.
         </p>
       )}
-      <h1 className="text-[52px] leading-[0.98] md:text-[88px]">Book your next appointment</h1>
-      <p className="mt-5 max-w-md text-[19px] text-muted md:text-[22px]">
+      <h1 className="text-display">Book your next appointment</h1>
+      <p className="mt-5 max-w-md text-body text-muted">
         Find a free time that suits you. Reschedule or cancel in one tap.
       </p>
       <div className="mt-9 grid gap-3 sm:max-w-md sm:grid-cols-2">

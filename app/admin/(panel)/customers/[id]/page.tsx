@@ -42,8 +42,8 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
       <div className="flex items-center gap-5 px-2 pt-5 pb-6">
         <Avatar name={c.name} src={c.avatar} size={84} />
         <div className="min-w-0">
-          <h1 className="text-[40px] leading-none break-words md:text-[60px]">{c.name}</h1>
-          <p className="mt-2 text-[15px] text-muted">
+          <h1 className="text-display break-words">{c.name}</h1>
+          <p className="mt-2 text-small text-muted">
             {c.password_hash ? 'Has a profile' : 'No profile yet'} · customer since {fmtDateShort(new Date(c.created_at).toISOString().slice(0, 10))}
           </p>
         </div>
@@ -78,7 +78,7 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
       <div className="mt-3 flex flex-col gap-3">
         <section className="card">
           <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-[26px]">Upcoming</h2>
+            <h2 className="text-title">Upcoming</h2>
             <Link href={`/admin/booking/new?customer=${c.id}`} className="btn btn-sm">
               <Plus size={18} /> Book
             </Link>
@@ -95,8 +95,8 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
         </section>
 
         <section className="card">
-          <h2 className="mb-1 text-[26px]">Notes</h2>
-          <p className="mb-4 text-[15px] text-muted">Only visible to you.</p>
+          <h2 className="mb-1 text-title">Notes</h2>
+          <p className="mb-4 text-small text-muted">Only visible to you.</p>
           <ActionForm action={saveNotes} className="flex flex-col gap-3">
             <input type="hidden" name="id" value={c.id} />
             <textarea
@@ -113,7 +113,7 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
 
         {(past.length > 0 || cancelled.length > 0) && (
           <section className="card">
-            <h2 className="mb-3 text-[26px]">History</h2>
+            <h2 className="mb-3 text-title">History</h2>
             <ul>
               {[...past, ...cancelled]
                 .sort((a, b) => b.date.localeCompare(a.date) || b.start_min - a.start_min)
@@ -123,7 +123,7 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
                       <span className={b.status === 'cancelled' ? 'text-muted line-through decoration-1' : ''}>
                         {b.service_name}
                       </span>
-                      <span className="shrink-0 text-[15px] text-muted">
+                      <span className="shrink-0 text-small text-muted">
                         {b.status === 'cancelled' ? 'Cancelled · ' : ''}
                         {fmtDateShort(b.date)}
                       </span>
@@ -135,7 +135,7 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
         )}
 
         <section className="card">
-          <h2 className="mb-4 text-[26px]">Details</h2>
+          <h2 className="mb-4 text-title">Details</h2>
           <ActionForm action={updateCustomer} className="flex flex-col gap-4">
             <input type="hidden" name="id" value={c.id} />
             <Field label="Name">
@@ -156,8 +156,8 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
         </section>
 
         <section className="card">
-          <h2 className="mb-1 text-[26px]">Password</h2>
-          <p className="mb-4 text-[15px] text-muted">
+          <h2 className="mb-1 text-title">Password</h2>
+          <p className="mb-4 text-small text-muted">
             {c.password_hash
               ? 'If the customer has forgotten their password, you can set a new one here and pass it on.'
               : "The customer hasn't created a profile yet. You can set a password for them here."}
@@ -188,8 +188,8 @@ export default async function CustomerPage(props: PageProps<'/admin/customers/[i
 function Stat({ label, value, small }: { label: string; value: string; small?: boolean }) {
   return (
     <div className="rounded-[24px] bg-card p-4 md:p-5">
-      <span className="block text-[14px] text-muted">{label}</span>
-      <span className={`mt-1 block leading-tight ${small ? 'text-[19px] md:text-[24px]' : 'text-[36px] md:text-[44px]'}`}>
+      <span className="block text-small text-muted">{label}</span>
+      <span className={`mt-1 block leading-tight ${small ? 'text-body' : 'text-title'}`}>
         {value}
       </span>
     </div>

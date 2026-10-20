@@ -21,8 +21,8 @@ export default async function LoginPage(props: PageProps<'/login'>) {
 
   return (
     <AuthShell compact>
-      <h1 className="text-[52px] leading-[0.98] md:text-[80px]">Log in</h1>
-      <p className="mt-3 text-[19px] text-muted">
+      <h1 className="text-display">Log in</h1>
+      <p className="mt-3 text-body text-muted">
         {next.startsWith('/book') ? 'Log in and your new appointment is ready to book.' : 'Welcome back.'}
       </p>
       <ActionForm action={login} className="mt-8 flex max-w-md flex-col gap-4">
@@ -37,7 +37,7 @@ export default async function LoginPage(props: PageProps<'/login'>) {
           Log in
         </SubmitButton>
       </ActionForm>
-      <p className="mt-6 max-w-md text-[16px] text-muted">
+      <p className="mt-6 max-w-md text-small text-muted">
         No profile yet?{' '}
         <Link href="/signup" className="text-ink underline underline-offset-4">
           Create one here

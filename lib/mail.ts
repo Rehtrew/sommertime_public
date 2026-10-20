@@ -72,7 +72,7 @@ function when(b: MailBooking) {
 // HTML email. Tables and inline styles, because that is what mail clients understand.
 // Mail clients rarely load web fonts, so emails use the system font.
 
-const FONT = `-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif`
+const FONT = `'General Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif`
 const INK = '#141414'
 const MUTED = '#8d8d8d'
 const LINE = '#e3e3e3'
@@ -139,6 +139,7 @@ function layout(o: {
 <meta name="supported-color-schemes" content="light">
 <title>${esc(o.label)}</title>
 <style>
+  @import url('https://api.fontshare.com/v2/css?f[]=general-sans@500&display=swap');
   body { margin: 0; padding: 0; background: #ededed; }
   @media (max-width: 480px) { .h1 { font-size: 30px !important; } .pad { padding: 20px 16px 24px !important; } }
 </style>

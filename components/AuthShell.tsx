@@ -17,7 +17,7 @@ export function AuthShell({
         }`}
       >
         <FlowVideo className="absolute inset-0" />
-        <Link href="/" className="absolute top-5 left-6 text-[22px] md:top-8 md:left-9 md:text-[26px]">
+        <Link href="/" className="absolute top-5 left-6 text-title md:top-8 md:left-9">
           {SALON.name}
         </Link>
       </section>

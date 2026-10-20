@@ -23,13 +23,13 @@ export default async function ProfilePage(props: PageProps<'/profile'>) {
           <ArrowLeft size={20} />
         </Link>
       </div>
-      <h1 className="px-2 pt-5 pb-6 text-[48px] leading-none md:text-[72px]">
+      <h1 className="px-2 pt-5 pb-6 text-display">
         {isNew ? `Welcome, ${firstName(me.name)}` : 'Your profile'}
       </h1>
 
       {isNew && (
         <Link href="/book" className="fade-in mb-3 flex items-center justify-between gap-4 rounded-[28px] bg-ink p-5 text-white">
-          <span className="text-[19px] leading-snug">
+          <span className="text-body leading-snug">
             Your profile is ready. Add a photo if you like, or go straight to booking.
           </span>
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-ink">
@@ -58,7 +58,7 @@ export default async function ProfilePage(props: PageProps<'/profile'>) {
         </section>
 
         <section className="card">
-          <h2 className="mb-4 text-[24px]">Change password</h2>
+          <h2 className="mb-4 text-title">Change password</h2>
           <ActionForm action={changePassword} className="flex flex-col gap-4">
             <Field label="Current password">
               <input className="input" name="current" type="password" autoComplete="current-password" required />

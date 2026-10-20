@@ -60,7 +60,7 @@ export default async function BookPage(props: PageProps<'/book'>) {
           <ArrowLeft size={20} />
         </Link>
       </div>
-      <h1 className="px-2 pt-5 pb-6 text-[48px] leading-none md:text-[72px]">{moving ? 'Reschedule' : 'Book an appointment'}</h1>
+      <h1 className="px-2 pt-5 pb-6 text-display">{moving ? 'Reschedule' : 'Book an appointment'}</h1>
 
       {sp.time && service && time === undefined && (
         <p className="mb-3 rounded-[28px] bg-danger-tile p-5 text-danger">
@@ -81,8 +81,8 @@ export default async function BookPage(props: PageProps<'/book'>) {
           {service ? (
             <div className="flex items-start justify-between gap-4 rounded-[20px] bg-tile p-4">
               <div>
-                <p className="text-[19px] leading-snug">{service.name}</p>
-                <p className="mt-1 text-[15px] text-muted">
+                <p className="text-body leading-snug">{service.name}</p>
+                <p className="mt-1 text-small text-muted">
                   {fmtDuration(service.duration_min)} · {priceRange(service.price_from, service.price_to)}
                 </p>
               </div>
@@ -113,11 +113,11 @@ export default async function BookPage(props: PageProps<'/book'>) {
                           aria-hidden
                         />
                         <span className="min-w-0 flex-1">
-                          <span className="block text-[19px] leading-snug">{s.name}</span>
+                          <span className="block text-body leading-snug">{s.name}</span>
                           {s.description && (
-                            <span className="mt-1 line-clamp-2 text-[15px] leading-snug text-muted">{s.description}</span>
+                            <span className="mt-1 line-clamp-2 text-small leading-snug text-muted">{s.description}</span>
                           )}
-                          <span className="mt-2 block text-[15px]">
+                          <span className="mt-2 block text-small">
                             {priceRange(s.price_from, s.price_to)} <span className="text-muted">· {fmtDuration(s.duration_min)}</span>
                           </span>
                         </span>
@@ -148,9 +148,9 @@ export default async function BookPage(props: PageProps<'/book'>) {
                       d === date ? 'bg-ink text-white' : 'bg-tile hover:bg-tile-strong'
                     }`}
                   >
-                    <span className={`text-[14px] ${d === date ? 'text-white/70' : 'text-muted'}`}>{fmtWeekdayShort(d)}</span>
-                    <span className="text-[28px] leading-tight">{dayNumber(d)}</span>
-                    <span className={`text-[14px] ${d === date ? 'text-white/70' : 'text-muted'}`}>{monthShort(d)}</span>
+                    <span className={`text-small ${d === date ? 'text-white/70' : 'text-muted'}`}>{fmtWeekdayShort(d)}</span>
+                    <span className="text-title leading-tight">{dayNumber(d)}</span>
+                    <span className={`text-small ${d === date ? 'text-white/70' : 'text-muted'}`}>{monthShort(d)}</span>
                     <LinkPending />
                   </Link>
                 ))}
@@ -185,13 +185,13 @@ export default async function BookPage(props: PageProps<'/book'>) {
           <section id="confirm" className="card fade-in scroll-mt-4">
             <Step n={4} title="Confirm" />
             <div className="rounded-[22px] bg-tile p-5">
-              <p className="text-[26px] leading-tight">{service.name}</p>
-              <p className="mt-2 text-[19px]">{cap(fmtDate(date))}</p>
-              <p className="text-[19px]">
+              <p className="text-title leading-tight">{service.name}</p>
+              <p className="mt-2 text-body">{cap(fmtDate(date))}</p>
+              <p className="text-body">
                 {fmtTime(time)}–{fmtTime(time + service.duration_min)}
               </p>
-              <p className="mt-2 text-[15px] text-muted">{priceRange(service.price_from, service.price_to)} · {fmtDuration(service.duration_min)}</p>
-              <p className="text-[15px] text-muted">{SALON.address}</p>
+              <p className="mt-2 text-small text-muted">{priceRange(service.price_from, service.price_to)} · {fmtDuration(service.duration_min)}</p>
+              <p className="text-small text-muted">{SALON.address}</p>
             </div>
             <ActionForm action={book} className="mt-4 flex flex-col gap-4">
               <input type="hidden" name="service" value={service.id} />
@@ -220,9 +220,9 @@ export default async function BookPage(props: PageProps<'/book'>) {
 
 function Step({ n, title, done = false }: { n: number; title: string; done?: boolean }) {
   return (
-    <h2 className="mb-4 flex items-center gap-3 text-[24px] leading-tight">
+    <h2 className="mb-4 flex items-center gap-3 text-title leading-tight">
       <span
-        className={`flex h-8 w-8 items-center justify-center rounded-full text-[15px] ${
+        className={`flex h-8 w-8 items-center justify-center rounded-full text-small ${
           done ? 'bg-ink text-white' : 'bg-tile text-muted'
         }`}
       >

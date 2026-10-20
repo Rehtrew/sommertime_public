@@ -15,8 +15,8 @@ export default async function SignupPage() {
 
   return (
     <AuthShell compact>
-      <h1 className="text-[52px] leading-[0.98] md:text-[80px]">Create profile</h1>
-      <p className="mt-3 text-[19px] text-muted">It takes less than a minute.</p>
+      <h1 className="text-display">Create profile</h1>
+      <p className="mt-3 text-body text-muted">It takes less than a minute.</p>
       <ActionForm action={signup} className="mt-8 flex max-w-md flex-col gap-4">
         <Field label="Your name">
           <input className="input" name="name" autoComplete="name" required />
@@ -31,7 +31,7 @@ export default async function SignupPage() {
           Create profile
         </SubmitButton>
       </ActionForm>
-      <p className="mt-6 text-[16px] text-muted">
+      <p className="mt-6 text-small text-muted">
         Already have a profile?{' '}
         <Link href="/login" className="text-ink underline underline-offset-4">
           Log in

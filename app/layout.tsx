@@ -1,16 +1,7 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist } from 'next/font/google'
 import { SALON } from '@/lib/salon'
 import './globals.css'
 import { DemoBar } from '@/components/DemoBar'
-
-// One weight only, by design: hierarchy comes from size and colour.
-const sans = Geist({
-  subsets: ['latin', 'latin-ext'],
-  weight: '500',
-  variable: '--font-face',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: { default: SALON.name, template: `%s · ${SALON.name}` },
@@ -27,7 +18,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={sans.variable}>
+    <html lang="en">
+      <head>
+        {/* General Sans, one weight only: hierarchy comes from size. Served by Fontshare, as its licence asks. */}
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@500&display=swap" />
+      </head>
       <body>
         <DemoBar />
         {children}

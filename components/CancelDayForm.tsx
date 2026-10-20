@@ -22,14 +22,14 @@ export function CancelDayForm({
   dayLabel: string
 }) {
   const [reason, setReason] = useState<'illness' | 'custom'>('illness')
-  const option = 'flex min-h-12 cursor-pointer items-center justify-center rounded-full bg-tile px-4 text-[16px] has-[:checked]:bg-ink has-[:checked]:text-white'
+  const option = 'flex min-h-12 cursor-pointer items-center justify-center rounded-full bg-tile px-4 text-small has-[:checked]:bg-ink has-[:checked]:text-white'
 
   return (
     <details className="card group">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
         <span>
-          <span className="block text-[22px] text-danger">Cancel the day</span>
-          <span className="block text-[15px] text-muted">E.g. if you're ill. All appointments are cancelled and the day is closed for booking.</span>
+          <span className="block text-title text-danger">Cancel the day</span>
+          <span className="block text-small text-muted">E.g. if you're ill. All appointments are cancelled and the day is closed for booking.</span>
         </span>
         <ChevronDown size={20} className="shrink-0 text-muted transition-transform group-open:rotate-180" />
       </summary>
@@ -81,7 +81,7 @@ export function CancelDayForm({
             <input type="checkbox" name="notify" defaultChecked className="mt-0.5 h-6 w-6 shrink-0 accent-ink" />
             <span>
               Email the customers the reason and a suggested new time
-              <span className="block text-[14px] text-muted">
+              <span className="block text-small text-muted">
                 {emailCount === count
                   ? `${count} ${count === 1 ? 'customer' : 'customers'} will be notified.`
                   : emailCount === 0

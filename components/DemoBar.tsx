@@ -7,7 +7,7 @@ export function DemoBar() {
   if (!DEMO) return null
   const link = 'underline underline-offset-2 hover:opacity-70'
   return (
-    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 bg-ink px-4 py-2 text-center text-[13px] leading-snug text-white">
+    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 bg-ink px-4 py-2 text-center text-small leading-snug text-white">
       <span className="text-white/60">Demo with made-up data that resets regularly</span>
       <form action={demoAsCustomer}>
         <button className={link}>View as customer</button>

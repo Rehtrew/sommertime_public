@@ -92,7 +92,7 @@ export async function AdminBookingForm({
         <input type="checkbox" name="notify" defaultChecked className="mt-0.5 h-6 w-6 shrink-0 accent-ink" />
         <span>
           {booking ? 'Email the customer if the appointment changes' : 'Email a confirmation to the customer'}
-          <span className="block text-[14px] text-muted">Only if the customer has an email.</span>
+          <span className="block text-small text-muted">Only if the customer has an email.</span>
         </span>
       </label>
       <SubmitButton className="btn" pendingText="Saving…">

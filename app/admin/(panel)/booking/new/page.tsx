@@ -21,11 +21,11 @@ export default async function NewBookingPage(props: PageProps<'/admin/booking/ne
           <ArrowLeft size={20} />
         </Link>
       </div>
-      <h1 className="px-2 pt-5 pb-6 text-[48px] leading-none md:text-[64px]">Book for customer</h1>
+      <h1 className="px-2 pt-5 pb-6 text-display">Book for customer</h1>
       <section className="card">
         <AdminBookingForm date={date} customerId={customerId} />
       </section>
-      <p className="mt-4 px-3 text-[15px] text-muted">
+      <p className="mt-4 px-3 text-small text-muted">
         You can book outside your opening hours. The system only makes sure bookings don't overlap.
       </p>
     </div>

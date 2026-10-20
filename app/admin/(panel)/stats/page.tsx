@@ -76,7 +76,7 @@ export default async function StatsPage() {
   return (
     <>
       <div className="px-2 pt-4 pb-6 md:pt-2">
-        <h1 className="text-[48px] leading-none md:text-[72px]">Statistics</h1>
+        <h1 className="text-display">Statistics</h1>
       </div>
 
       <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
@@ -89,12 +89,12 @@ export default async function StatsPage() {
 
       <div className="mt-3 grid items-start gap-3 lg:grid-cols-2">
         <section className="card">
-          <h2 className="text-[26px]">Bookings per month</h2>
-          <p className="mb-6 text-[15px] text-muted">The last 6 months, incl. upcoming appointments</p>
+          <h2 className="text-title">Bookings per month</h2>
+          <p className="mb-6 text-small text-muted">The last 6 months, incl. upcoming appointments</p>
           <div className="flex h-48 items-end gap-2 border-b border-line" role="img" aria-label="Bar chart of bookings per month">
             {monthData.map((m) => (
               <div key={m.ym} className="flex h-full flex-1 flex-col items-center justify-end" title={`${monthLabel(m.ym)}: ${m.n} ${m.n === 1 ? 'booking' : 'bookings'} · ${kr(m.revenue)}`}>
-                <span className="mb-1 text-[14px] text-muted">{m.n}</span>
+                <span className="mb-1 text-small text-muted">{m.n}</span>
                 <span
                   className={`w-full max-w-6 rounded-t-[4px] ${m.ym === month ? 'bg-ink' : 'bg-[#c9c9c9]'}`}
                   style={{ height: `${Math.max((m.n / maxMonth) * 85, m.n ? 3 : 0)}%` }}
@@ -104,7 +104,7 @@ export default async function StatsPage() {
           </div>
           <div className="mt-2 flex gap-2">
             {monthData.map((m) => (
-              <span key={m.ym} className={`flex-1 text-center text-[14px] ${m.ym === month ? 'text-ink' : 'text-muted'}`}>
+              <span key={m.ym} className={`flex-1 text-center text-small ${m.ym === month ? 'text-ink' : 'text-muted'}`}>
                 {monthLabel(m.ym)}
               </span>
             ))}
@@ -124,13 +124,13 @@ export default async function StatsPage() {
         </section>
 
         <section className="card">
-          <h2 className="text-[26px]">Popular treatments</h2>
-          <p className="mb-5 text-[15px] text-muted">Completed visits</p>
+          <h2 className="text-title">Popular treatments</h2>
+          <p className="mb-5 text-small text-muted">Completed visits</p>
           {topServices.length ? (
             <ul className="flex flex-col gap-4">
               {topServices.map((s) => (
                 <li key={s.name}>
-                  <div className="mb-1.5 flex items-baseline justify-between gap-3 text-[16px]">
+                  <div className="mb-1.5 flex items-baseline justify-between gap-3 text-small">
                     <span className="truncate">{s.name}</span>
                     <span className="shrink-0 text-muted">{s.n}</span>
                   </div>
@@ -146,17 +146,17 @@ export default async function StatsPage() {
         </section>
 
         <section className="card">
-          <h2 className="text-[26px]">Most loyal customers</h2>
-          <p className="mb-4 text-[15px] text-muted">Most visits</p>
+          <h2 className="text-title">Most loyal customers</h2>
+          <p className="mb-4 text-small text-muted">Most visits</p>
           {topCustomers.length ? (
             <ul>
               {topCustomers.map((c, i) => (
                 <li key={c.id}>
                   <Link href={`/admin/customers/${c.id}`} className="-mx-2 flex items-center gap-3 rounded-[18px] p-2 hover:bg-tile">
-                    <span className="w-5 text-center text-[15px] text-muted">{i + 1}</span>
+                    <span className="w-5 text-center text-small text-muted">{i + 1}</span>
                     <Avatar name={c.name} src={c.avatar} size={40} />
                     <span className="min-w-0 flex-1 truncate">{c.name}</span>
-                    <span className="shrink-0 text-right text-[15px] text-muted">
+                    <span className="shrink-0 text-right text-small text-muted">
                       {c.n} {c.n === 1 ? 'visit' : 'visits'}
                       <span className="block">{kr(c.spent)}</span>
                     </span>
@@ -170,8 +170,8 @@ export default async function StatsPage() {
         </section>
 
         <section className="card">
-          <h2 className="text-[26px]">Not seen for a while</h2>
-          <p className="mb-4 text-[15px] text-muted">Over 8 weeks since the last visit and no new appointment booked</p>
+          <h2 className="text-title">Not seen for a while</h2>
+          <p className="mb-4 text-small text-muted">Over 8 weeks since the last visit and no new appointment booked</p>
           {lapsed.length ? (
             <ul>
               {lapsed.map((c) => (
@@ -180,9 +180,9 @@ export default async function StatsPage() {
                     <Avatar name={c.name} src={c.avatar} size={40} />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate">{c.name}</span>
-                      {c.phone && <span className="block text-[14px] text-muted">{fmtPhone(c.phone)}</span>}
+                      {c.phone && <span className="block text-small text-muted">{fmtPhone(c.phone)}</span>}
                     </span>
-                    <span className="shrink-0 text-right text-[15px] text-muted">
+                    <span className="shrink-0 text-right text-small text-muted">
                       {Math.floor(daysBetween(c.last, t) / 7)} weeks
                       <span className="block">{fmtDateShort(c.last)}</span>
                     </span>
@@ -203,9 +203,9 @@ export default async function StatsPage() {
 function Tile({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <div className="rounded-[24px] bg-card p-4 md:p-6">
-      <span className="block text-[14px] leading-snug text-muted">{label}</span>
-      <span className="mt-2 block text-[28px] leading-none md:text-[40px]">{value}</span>
-      <span className="mt-2 block text-[13px] leading-snug text-muted">{sub}</span>
+      <span className="block text-small leading-snug text-muted">{label}</span>
+      <span className="mt-2 block text-title leading-none">{value}</span>
+      <span className="mt-2 block text-small leading-snug text-muted">{sub}</span>
     </div>
   )
 }

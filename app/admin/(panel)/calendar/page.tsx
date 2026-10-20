@@ -74,7 +74,7 @@ export default async function CalendarPage(props: PageProps<'/admin/calendar'>) 
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4 px-2 pt-4 pb-6 md:pt-2">
-        <h1 className="text-[48px] leading-none md:text-[72px]">Calendar</h1>
+        <h1 className="text-display">Calendar</h1>
         <nav className="flex rounded-full bg-card p-1" aria-label="View">
           {(
             [
@@ -87,7 +87,7 @@ export default async function CalendarPage(props: PageProps<'/admin/calendar'>) 
               href={href({ view: v })}
               scroll={false}
               aria-current={view === v ? 'page' : undefined}
-              className={`relative rounded-full px-5 py-2.5 text-[16px] transition-colors ${
+              className={`relative rounded-full px-5 py-2.5 text-small transition-colors ${
                 view === v ? 'bg-ink text-white' : 'text-muted hover:text-ink'
               }`}
             >
@@ -103,7 +103,7 @@ export default async function CalendarPage(props: PageProps<'/admin/calendar'>) 
           <div className="min-w-0">
             <MonthPicker value={month} options={monthOptions} hrefs={monthHrefs} />
             {view === 'week' && (
-              <p className="mt-0.5 text-[15px] text-muted">
+              <p className="mt-0.5 text-small text-muted">
                 Week {isoWeek(from)} · {fmtWeekRange(from, to)}
               </p>
             )}
@@ -132,7 +132,7 @@ export default async function CalendarPage(props: PageProps<'/admin/calendar'>) 
           <MonthView days={days} month={month} today={t} selected={dayOpen ? date : null} byDay={byDay} dayHref={dayHref} />
         )}
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-2 text-[13px] text-muted">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-2 text-caption text-muted">
           <span>Tap a day to see it and open it for booking.</span>
           <span className="flex gap-4">
             <span className="flex items-center gap-1.5">
@@ -195,9 +195,9 @@ function WeekView({
               }`}
             >
               <Link href={dayHref(d)} scroll={false} className="relative flex items-center gap-2 rounded-[14px] px-2 py-1.5 hover:bg-white/70">
-                <span className="text-[13px] text-muted">{fmtWeekdayShort(d)}</span>
+                <span className="text-caption text-muted">{fmtWeekdayShort(d)}</span>
                 <span
-                  className={`flex h-8 min-w-8 items-center justify-center rounded-full px-1 text-[20px] ${
+                  className={`flex h-8 min-w-8 items-center justify-center rounded-full px-1 text-body ${
                     d === t ? 'bg-ink text-white' : ''
                   }`}
                 >
@@ -206,7 +206,7 @@ function WeekView({
                 <LinkPending />
               </Link>
               {wins.length > 0 ? (
-                <Link href={dayHref(d)} scroll={false} className="relative rounded-full bg-white px-2 py-1 text-center text-[13px] hover:bg-white/70">
+                <Link href={dayHref(d)} scroll={false} className="relative rounded-full bg-white px-2 py-1 text-center text-caption hover:bg-white/70">
                   {hours(wins)}
                   <LinkPending />
                 </Link>
@@ -215,7 +215,7 @@ function WeekView({
                   <Link
                     href={dayHref(d)}
                     scroll={false}
-                    className="relative flex items-center justify-center gap-1 rounded-full border-[1.5px] border-dashed border-[#d0d0d0] px-2 py-0.5 text-[13px] text-muted hover:border-ink hover:text-ink"
+                    className="relative flex items-center justify-center gap-1 rounded-full border-[1.5px] border-dashed border-[#d0d0d0] px-2 py-0.5 text-caption text-muted hover:border-ink hover:text-ink"
                   >
                     <Plus size={14} /> Open
                     <LinkPending />
@@ -229,9 +229,9 @@ function WeekView({
                   className="relative block rounded-[12px] border-l-4 bg-white px-2 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.1)]"
                   style={{ borderLeftColor: categoryColor(b.category) }}
                 >
-                  <span className="block text-[12px] leading-tight text-muted">{fmtTime(b.start_min)}</span>
-                  <span className="block truncate text-[14px] leading-snug">{b.customer_name ?? 'Deleted customer'}</span>
-                  <span className="block truncate text-[12px] leading-tight text-muted">{b.service_name}</span>
+                  <span className="block text-caption leading-tight text-muted">{fmtTime(b.start_min)}</span>
+                  <span className="block truncate text-caption leading-snug">{b.customer_name ?? 'Deleted customer'}</span>
+                  <span className="block truncate text-caption leading-tight text-muted">{b.service_name}</span>
                   <LinkPending />
                 </Link>
               ))}
@@ -255,19 +255,19 @@ function WeekView({
                 }`}
               >
                 <span className="flex w-11 shrink-0 flex-col items-center">
-                  <span className="text-[13px] text-muted">{fmtWeekdayShort(d)}</span>
+                  <span className="text-caption text-muted">{fmtWeekdayShort(d)}</span>
                   <span
-                    className={`flex h-9 w-9 items-center justify-center rounded-full text-[20px] ${d === t ? 'bg-ink text-white' : ''}`}
+                    className={`flex h-9 w-9 items-center justify-center rounded-full text-body ${d === t ? 'bg-ink text-white' : ''}`}
                   >
                     {dayNumber(d)}
                   </span>
                 </span>
                 <span className="min-w-0 flex-1 pt-0.5">
-                  <span className={`block text-[15px] ${wins.length ? '' : 'text-muted'}`}>
+                  <span className={`block text-small ${wins.length ? '' : 'text-muted'}`}>
                     {wins.length ? `Open ${hours(wins)}` : past ? 'Closed' : 'Closed · tap to open'}
                   </span>
                   {books.map((b) => (
-                    <span key={b.id} className="mt-1 flex items-center gap-2 text-[15px]">
+                    <span key={b.id} className="mt-1 flex items-center gap-2 text-small">
                       <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: categoryColor(b.category) }} />
                       <span className="shrink-0 text-muted">{fmtTime(b.start_min)}</span>
                       <span className="truncate">
@@ -305,7 +305,7 @@ function MonthView({
   return (
     <div className="grid grid-cols-7 gap-1">
       {WEEKDAYS.map((w) => (
-        <span key={w} className="pb-1 text-center text-[13px] text-muted lg:px-2.5 lg:text-left">
+        <span key={w} className="pb-1 text-center text-caption text-muted lg:px-2.5 lg:text-left">
           {w}
         </span>
       ))}
@@ -322,15 +322,15 @@ function MonthView({
               d === t && !isSelected ? 'ring-[1.5px] ring-ink ring-inset' : ''
             } ${!d.startsWith(month) ? 'opacity-35' : d < t && !isSelected ? 'opacity-55' : ''}`}
           >
-            <span className="text-[17px] leading-tight">{dayNumber(d)}</span>
+            <span className="text-body leading-tight">{dayNumber(d)}</span>
             {books.length > 0 && (
-              <span className="mt-1 flex items-center gap-1.5 text-[12px] leading-none">
+              <span className="mt-1 flex items-center gap-1.5 text-caption leading-none">
                 <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${isSelected ? 'bg-white' : 'bg-ink'}`} />
                 <span className="hidden lg:inline">{books.length}</span>
               </span>
             )}
             {wins.length > 0 && (
-              <span className={`mt-auto hidden w-full truncate pt-1 text-[12px] lg:block ${isSelected ? 'text-white/70' : 'text-muted'}`}>
+              <span className={`mt-auto hidden w-full truncate pt-1 text-caption lg:block ${isSelected ? 'text-white/70' : 'text-muted'}`}>
                 {hours(wins)}
               </span>
             )}

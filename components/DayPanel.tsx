@@ -49,8 +49,8 @@ export async function DayPanel({
 
   const hoursCard = (
     <section className="card">
-      <h3 className="text-[22px]">Opening hours</h3>
-      <p className="mt-1 mb-4 text-[15px] text-muted">Customers can only book within the hours you open.</p>
+      <h3 className="text-title">Opening hours</h3>
+      <p className="mt-1 mb-4 text-small text-muted">Customers can only book within the hours you open.</p>
       {isOpen && (
         <ul className="mb-4 flex flex-wrap gap-2">
           {windows.map((w) => (
@@ -102,9 +102,7 @@ export async function DayPanel({
   const bookingsCard = (
     <section className="card">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="text-[22px]">
-          Bookings <span className="text-muted">{bookings.length || ''}</span>
-        </h3>
+        <h3 className="text-title">Bookings</h3>
         <Link href={`/admin/booking/new?date=${date}`} className="btn btn-sm relative">
           <Plus size={18} /> Book
           <LinkPending />
@@ -117,15 +115,15 @@ export async function DayPanel({
       )}
       {cancelled.length > 0 && (
         <div className="mt-5 border-t border-line pt-4">
-          <p className="mb-2 text-[15px] text-muted">Cancelled appointments</p>
-          <ul className="flex flex-col gap-2 text-[15px] text-muted">
+          <p className="mb-2 text-small text-muted">Cancelled appointments</p>
+          <ul className="flex flex-col gap-2 text-small text-muted">
             {cancelled.map((b) => (
               <li key={b.id}>
                 <Link href={`/admin/booking/${b.id}`} className="hover:text-ink">
                   <span className="line-through decoration-1">
                     {fmtTime(b.start_min)} {b.customer_name ?? 'Deleted customer'} · {b.service_name}
                   </span>
-                  <span className="block text-[13px]">
+                  <span className="block text-caption">
                     {b.cancelled_by === 'salon' ? `Cancelled by you${b.cancel_reason ? `: ${b.cancel_reason}` : ''}` : 'Cancelled by the customer'}
                   </span>
                 </Link>
@@ -141,14 +139,14 @@ export async function DayPanel({
     <div className="flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3 px-2 pt-2">
         <div className="min-w-0">
-          <h2 className="text-[30px] leading-tight">{cap(fmtDate(date))}</h2>
+          <h2 className="text-title leading-tight">{cap(fmtDate(date))}</h2>
           <p className="mt-2">
             {isOpen ? (
-              <span className="inline-flex rounded-full bg-[#eef0fa] px-3 py-1 text-[15px]">
+              <span className="inline-flex rounded-full bg-[#eef0fa] px-3 py-1 text-small">
                 Open {windows.map((w) => `${fmtTime(w.start_min)}–${fmtTime(w.end_min)}`).join(', ')}
               </span>
             ) : (
-              <span className="inline-flex rounded-full bg-card px-3 py-1 text-[15px] text-muted">Closed for booking</span>
+              <span className="inline-flex rounded-full bg-card px-3 py-1 text-small text-muted">Closed for booking</span>
             )}
           </p>
         </div>
@@ -173,7 +171,7 @@ export async function DayPanel({
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ok text-white">
             <Check size={18} />
           </span>
-          <p className="text-[16px] leading-snug">
+          <p className="text-small leading-snug">
             The day is cancelled and closed for booking.
             {cancelNotice.cancelled > 0 &&
               ` ${cancelNotice.cancelled} ${cancelNotice.cancelled === 1 ? 'appointment was' : 'appointments were'} cancelled.`}

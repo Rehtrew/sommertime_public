@@ -14,15 +14,15 @@ export function AdminBookingRow({ b, showDate, hideCustomer }: { b: Booking; sho
       <LinkPending />
       <span className="w-1 shrink-0 rounded-full" style={{ background: categoryColor(b.category) }} aria-hidden />
       <span className="min-w-0 flex-1">
-        <span className="block text-[15px] text-muted">
+        <span className="block text-small text-muted">
           {showDate ? `${showDate} · ` : ''}
           {fmtTime(b.start_min)}–{fmtTime(b.end_min)}
         </span>
-        <span className="block truncate text-[19px] leading-snug">
+        <span className="block truncate">
           {hideCustomer ? b.service_name : (b.customer_name ?? 'Deleted customer')}
         </span>
-        {!hideCustomer && <span className="block truncate text-[15px] text-muted">{b.service_name}</span>}
-        {b.note && <span className="mt-1 block truncate text-[14px] text-muted">“{b.note}”</span>}
+        {!hideCustomer && <span className="block truncate text-small text-muted">{b.service_name}</span>}
+        {b.note && <span className="mt-1 block truncate text-small text-muted">“{b.note}”</span>}
       </span>
       <ChevronRight size={20} className="self-center text-muted" />
     </Link>

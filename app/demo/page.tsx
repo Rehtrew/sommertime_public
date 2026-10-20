@@ -23,8 +23,8 @@ export default function DemoPage() {
   if (!DEMO) notFound()
   return (
     <AuthShell compact>
-      <h1 className="text-[52px] leading-[0.98] md:text-[80px]">Try the demo</h1>
-      <p className="mt-4 max-w-md text-[19px] text-muted">
+      <h1 className="text-display">Try the demo</h1>
+      <p className="mt-4 max-w-md text-body text-muted">
         A small booking system for a one-person hair salon. All names and appointments are made up, and everything resets
         regularly, so feel free to click around.
       </p>
@@ -32,8 +32,8 @@ export default function DemoPage() {
         <DemoButtons />
       </div>
       <div className="mt-10 max-w-md">
-        <h2 className="text-[24px]">Emails</h2>
-        <p className="mt-1 mb-3 text-[15px] text-muted">The demo doesn’t send emails, but you can see them here.</p>
+        <h2 className="text-title">Emails</h2>
+        <p className="mt-1 mb-3 text-small text-muted">The demo doesn’t send emails, but you can see them here.</p>
         <ul className="flex flex-col gap-1.5">
           {MAILS.map(([type, label]) => (
             <li key={type}>

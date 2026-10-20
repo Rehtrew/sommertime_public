@@ -26,7 +26,7 @@ export function DayTimeline({ windows, bookings }: { windows: Window[]; bookings
       ))}
       {hours.map((h) => (
         <div key={h} className="absolute inset-x-0 flex items-start gap-3" style={{ top: y(h) }}>
-          <span className="w-11 -translate-y-1/2 text-right text-[13px] text-muted">{fmtTime(h)}</span>
+          <span className="w-11 -translate-y-1/2 text-right text-caption text-muted">{fmtTime(h)}</span>
           <span className="flex-1 border-t border-line" />
         </div>
       ))}
@@ -41,16 +41,16 @@ export function DayTimeline({ windows, bookings }: { windows: Window[]; bookings
             style={{ top: y(b.start_min) + 1, height: h - 2, borderLeftColor: categoryColor(b.category) }}
           >
             {short ? (
-              <span className="block truncate text-[14px] leading-[20px]">
+              <span className="block truncate text-caption leading-[20px]">
                 {fmtTime(b.start_min)} {b.customer_name ?? 'Deleted customer'} · <span className="text-muted">{b.service_name}</span>
               </span>
             ) : (
               <span className="block py-2 leading-tight">
-                <span className="block text-[13px] text-muted">
+                <span className="block text-caption text-muted">
                   {fmtTime(b.start_min)}–{fmtTime(b.end_min)}
                 </span>
-                <span className="block truncate text-[17px]">{b.customer_name ?? 'Deleted customer'}</span>
-                <span className="block truncate text-[14px] text-muted">{b.service_name}</span>
+                <span className="block truncate text-body">{b.customer_name ?? 'Deleted customer'}</span>
+                <span className="block truncate text-caption text-muted">{b.service_name}</span>
               </span>
             )}
           </Link>
